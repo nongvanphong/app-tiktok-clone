@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import Itemlist from './itemlist';
+import Itemlist from './mainprofile/itemlist';
 const dataItem = [
   {
     img1: require('../../../../assets/iconpng/sun.png'),
@@ -23,7 +23,13 @@ export default function Bottomprofile() {
   return (
     <View style={[styles.container]}>
       {dataItem.map((e, index) => (
-        <Itemlist key={index} img1={e.img1} txt={e.txt} img2={e.img2} />
+        <Itemlist
+          key={index}
+          index={index}
+          img1={e.img1}
+          txt={e.txt}
+          img2={e.img2}
+        />
       ))}
     </View>
   );
@@ -32,7 +38,7 @@ export default function Bottomprofile() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 20,
     borderRadius: 30,
     marginHorizontal: 10,
     backgroundColor: '#ffffff',

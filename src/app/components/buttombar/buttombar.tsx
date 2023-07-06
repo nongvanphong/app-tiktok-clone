@@ -13,15 +13,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Profile from '../../screens/profile/profile';
 import ListItem from '../../screens/home/listview/listitem';
 import Home from '../../screens/home/home';
-
-function SettingsScreen() {
-  console.log('12');
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+import Add from '../../screens/add/Add';
 
 const Tab = createBottomTabNavigator();
 
@@ -63,7 +55,7 @@ const Buttombar = () => {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={Add}
         options={{
           tabBarIcon: ({focused}) => (
             <View

@@ -1,15 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import HearderBarBack from '../../components/headerbar/hearderBarBack';
-import Profilemain from './profilemain';
-import Itemfeedback from './itemfeedback';
+import Profilemain from './mainprofile/profilemain';
+import Itemfeedback from './mainprofile/itemfeedback';
 import Bottomprofile from './bottomprofile';
+import CustomSwitch from '../../components/customSwitch/customSwitch';
 
 const Profile = () => {
   return (
     <View>
-      <HearderBarBack />
-
+      {/* <HearderBarBack /> */}
       <Profilemain />
     </View>
   );

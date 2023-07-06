@@ -1,12 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {ColorLight} from '../../../../assets/colors/colorLight';
-
-const Itemfeedback = () => {
+import {ColorLight} from '../../../../../assets/colors/colorLight';
+type item = {
+  number?: number;
+  name: string;
+};
+const Itemfeedback = (props: item) => {
   return (
     <View style={[styles.container, styles.shadowProp]}>
-      <Text style={styles.txtTilte}>127</Text>
-      <Text style={styles.txt}>Like</Text>
+      <Text style={styles.txtTilte}>{props.number}</Text>
+      <Text style={styles.txt}>{props.name}</Text>
     </View>
   );
 };
@@ -15,11 +18,11 @@ export default Itemfeedback;
 
 const styles = StyleSheet.create({
   container: {
-    width: 60,
-    height: 60,
+    width: 100,
+    height: 50,
     borderRadius: 10,
     backgroundColor: '#ffffff',
-    padding: 10,
+    padding: 5,
     alignItems: 'center',
   },
   shadowProp: {
@@ -30,12 +33,12 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   txtTilte: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500',
     color: ColorLight.txtbl,
   },
   txt: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '500',
     color: ColorLight.txtbl,
   },

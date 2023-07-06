@@ -1,11 +1,18 @@
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Itemfeedback from './itemfeedback';
-import Bottomprofile from './bottomprofile';
+import Bottomprofile from './../bottomprofile';
+import Itemname from './itemname';
+import {Index} from './../../../index';
+
+const dataTest = [123, 333, 666];
 
 const Profilemain = () => {
   return (
     <ScrollView
+      style={{
+        paddingTop: 20,
+      }}
       onScroll={event => {
         console.log(event.nativeEvent.contentOffset.y);
       }}
@@ -15,14 +22,19 @@ const Profilemain = () => {
           <View style={[styles.avt, styles.brRadiusAll]}>
             <Image
               style={[styles.img, styles.brRadiusAll]}
-              source={require('../../../../assets/images/images.jpg')}
+              source={require('../../../../../assets/images/a.jpg')}
             />
           </View>
         </View>
+        <Itemname />
         <View style={[{marginVertical: 20}, styles.flexR, styles.justifySp]}>
-          <Itemfeedback />
-          <Itemfeedback />
-          <Itemfeedback />
+          {dataTest.map((e, Index) => (
+            <Itemfeedback
+              key={Index}
+              number={e}
+              name={Index == 0 ? 'Like' : Index === 1 ? 'Bye' : 'Sell'}
+            />
+          ))}
         </View>
         <Bottomprofile />
       </View>
@@ -49,7 +61,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderWidth: 5,
-    borderColor: 'green',
+    borderColor: 'pink',
     padding: 3,
   },
   img: {

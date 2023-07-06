@@ -1,7 +1,9 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import CustomSwitch from '../../../components/customSwitch/customSwitch';
 
 type typerItemList = {
+  index?: number;
   img1: any;
   txt: string;
   img2: any;
@@ -10,7 +12,7 @@ type typerItemList = {
 const Itemlist = (props: typerItemList) => {
   return (
     <View>
-      <TouchableOpacity>
+      <TouchableOpacity disabled={props.index == 0 ? true : false}>
         <View
           style={[
             styles.container,
@@ -22,7 +24,11 @@ const Itemlist = (props: typerItemList) => {
             <Image style={styles.icon} source={props.img1} />
             <Text style={styles.mgL}>{props.txt}</Text>
           </View>
-          <Image style={styles.icon} source={props.img2} />
+          {props.index == 0 ? (
+            <CustomSwitch />
+          ) : (
+            <Image style={styles.icon} source={props.img2} />
+          )}
         </View>
       </TouchableOpacity>
     </View>
