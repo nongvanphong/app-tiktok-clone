@@ -25,10 +25,12 @@ const Buttombar = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: 'absolute',
-          bottom: 25,
-          left: 20,
-          right: 20,
-          borderRadius: 20,
+          // bottom: 25,
+          // left: 20,
+          // right: 20,
+          //borderRadius: 20,
+          // borderTopRightRadius: 20,
+          // borderTopLeftRadius: 20,
           height: 60,
           paddingBottom: 10,
           backgroundColor: '#ffffff',
@@ -67,7 +69,7 @@ const Buttombar = () => {
                 width: 50,
                 height: 50,
                 borderRadius: 100,
-                backgroundColor: 'green',
+                backgroundColor: 'pink',
               }}>
               <Image
                 source={require('../../../../assets/iconpng/add.png')}

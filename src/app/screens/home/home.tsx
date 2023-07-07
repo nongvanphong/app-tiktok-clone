@@ -10,7 +10,8 @@ import Headerbar from './../../components/headerbar/headerbar';
 const Home = () => {
   return (
     <View style={{flex: 1}}>
-      <Headerbar />
+      {/* <Headerbar /> */}
+
       <ListItem />
     </View>
   );

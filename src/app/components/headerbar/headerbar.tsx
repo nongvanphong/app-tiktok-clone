@@ -12,7 +12,7 @@ const Headerbar = () => {
           styles.alignCenter,
           styles.item,
         ]}>
-        <Text style={styles.txtLogo}>Agriculater</Text>
+        <Text style={styles.txtLogo}>ARi</Text>
         <View style={styles.flexR}>
           <TouchableOpacity style={[styles.mgR, styles.fillter]}>
             <Image
@@ -37,6 +37,9 @@ export default Headerbar;
 const styles = StyleSheet.create({
   container: {
     height: 60,
+    position: 'absolute',
+    zIndex: 1,
+    width: '100%',
   },
   paddingall: {
     padding: 20,

@@ -8,32 +8,62 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ColorLight} from '../../../../assets/colors/colorLight';
 import {Texts} from '../../../../assets/texts/text';
 import {SvgXml} from 'react-native-svg';
 import {Svgs} from '../../../../assets/icons';
 import {useNavigation} from '@react-navigation/native';
-
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 const {width, height} = Dimensions.get('window');
 
 const Login = () => {
   const navigater = useNavigation();
+  const loginGogle = async () => {
+    useEffect(() => {
+      configureGoogleSignIn();
+    }, []);
+
+    const configureGoogleSignIn = async () => {
+      await GoogleSignin.configure({
+        scopes: ['email'],
+        webClientId: 'AIzaSyC_-vAKKjTTOkYFA2SLvmIKEgwE1ULWnr0',
+      });
+    };
+    console.log('========2');
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log('User Info:', userInfo);
+      // Xử lý thông tin người dùng sau khi đăng nhập thành công
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('Đăng nhập đã huỷ');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('Yêu cầu đăng nhập đang tiếp diễn');
+      } else {
+        console.log('Đã xảy ra lỗi đăng nhập:', error);
+      }
+    }
+  };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <Text style={[styles.textTaitle]}>{Texts.login}</Text>
-
         <Image
           style={styles.image}
           source={require('../../../../assets/images/farm.png')}
           resizeMode="contain"
         />
-
         <View style={styles.flexRow}>
-          <TouchableOpacity style={styles.bnt}>
-            <Text style={[styles.textbnt, styles.txtSize]}>googale</Text>
+          <TouchableOpacity style={styles.bnt} onPress={() => loginGogle()}>
+            <Text style={[styles.textbnt, styles.txtSize]}>Google</Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={styles.bnt}>
             <Text style={[styles.textbnt, styles.txtSize]}>Facebook</Text>
           </TouchableOpacity>
@@ -56,7 +86,6 @@ const Login = () => {
               keyboardType="numeric"
             />
           </View>
-
           <Text style={[styles.txtR, styles.txtSize, styles.txtColor]}>
             {Texts.fogetPassWork}
           </Text>
