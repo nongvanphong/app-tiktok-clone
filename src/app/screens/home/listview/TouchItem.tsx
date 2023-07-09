@@ -43,5 +43,6 @@ const styles = StyleSheet.create({
   love: {
     width: 40,
     height: 40,
+    tintColor: '#ffff',
   },
 });

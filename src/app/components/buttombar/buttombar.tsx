@@ -23,6 +23,7 @@ const Buttombar = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+
         tabBarStyle: {
           position: 'absolute',
           // bottom: 25,
@@ -32,9 +33,9 @@ const Buttombar = () => {
           // borderTopRightRadius: 20,
           // borderTopLeftRadius: 20,
           height: 60,
-          paddingBottom: 10,
-          backgroundColor: '#ffffff',
-          ...styles.shadow,
+          // paddingBottom: 10,
+          backgroundColor: 'rgba(193, 194, 196 ,0.1)',
+          // ...styles.shadow,
         },
       }}>
       <Tab.Screen
@@ -43,7 +44,10 @@ const Buttombar = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <View
-              style={{alignItems: 'center', justifyContent: 'center', top: 10}}>
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
               <Image
                 source={require('../../../../assets/iconpng/home.png')}
                 style={{width: 20, height: 20}}
@@ -86,8 +90,7 @@ const Buttombar = () => {
         component={Profile}
         options={{
           tabBarIcon: ({focused}) => (
-            <View
-              style={{alignItems: 'center', justifyContent: 'center', top: 10}}>
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
                 source={require('../../../../assets/iconpng/user.png')}
                 style={{width: 20, height: 20}}
