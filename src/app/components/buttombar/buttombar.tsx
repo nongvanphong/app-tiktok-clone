@@ -17,7 +17,7 @@ import Add from '../../screens/add/Add';
 
 const Tab = createBottomTabNavigator();
 
-const Buttombar = () => {
+const Buttombar = React.memo(() => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -25,7 +25,7 @@ const Buttombar = () => {
         tabBarShowLabel: false,
 
         tabBarStyle: {
-          position: 'absolute',
+          // position: 'absolute',
           // bottom: 25,
           // left: 20,
           // right: 20,
@@ -34,8 +34,10 @@ const Buttombar = () => {
           // borderTopLeftRadius: 20,
           height: 60,
           // paddingBottom: 10,
-          backgroundColor: 'rgba(193, 194, 196 ,0.1)',
+          backgroundColor: 'rgba(0, 0, 0 ,1)',
           // ...styles.shadow,
+          borderTopWidth: 2,
+          borderColor: '#ffff',
         },
       }}>
       <Tab.Screen
@@ -52,9 +54,9 @@ const Buttombar = () => {
                 source={require('../../../../assets/iconpng/home.png')}
                 style={{width: 20, height: 20}}
                 resizeMode="contain"
-                tintColor={focused ? '#e32f45' : '#748c94'}
+                tintColor={focused ? '#ffff' : '#748c94'}
               />
-              <Text style={{color: focused ? '#e32f45' : '#748c94'}}>home</Text>
+              <Text style={{color: focused ? '#ffff' : '#748c94'}}>home</Text>
             </View>
           ),
         }}
@@ -68,18 +70,18 @@ const Buttombar = () => {
               style={{
                 alignItems: 'center',
                 justifyContent: 'center',
-                top: -15,
-                position: 'absolute',
-                width: 50,
-                height: 50,
+                // top: -15,
+                //position: 'absolute',
+                //width: 40,
+                // height: 40,
                 borderRadius: 100,
-                backgroundColor: 'pink',
+                // backgroundColor: 'rgba(0, 0, 0 ,0.5)',
               }}>
               <Image
                 source={require('../../../../assets/iconpng/add.png')}
-                style={{width: 20, height: 20}}
+                style={{width: 30, height: 30}}
                 resizeMode="contain"
-                tintColor={focused ? '#e32f45' : '#748c94'}
+                tintColor={focused ? '#ffff' : '#748c94'}
               />
             </View>
           ),
@@ -95,9 +97,9 @@ const Buttombar = () => {
                 source={require('../../../../assets/iconpng/user.png')}
                 style={{width: 20, height: 20}}
                 resizeMode="contain"
-                tintColor={focused ? '#e32f45' : '#748c94'}
+                tintColor={focused ? '#ffff' : '#748c94'}
               />
-              <Text style={{color: focused ? '#e32f45' : '#748c94'}}>
+              <Text style={{color: focused ? '#ffff' : '#748c94'}}>
                 profile
               </Text>
             </View>
@@ -106,7 +108,7 @@ const Buttombar = () => {
       />
     </Tab.Navigator>
   );
-};
+});
 
 export default Buttombar;
 

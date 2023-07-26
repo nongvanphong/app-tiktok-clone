@@ -29,7 +29,7 @@ const Lap1 = () => {
 
   useEffect(() => {
     request
-      .get('http://172.16.27.126:1234/product/all')
+      .get('http://172.16.28.144:1234/product/all')
       .query({_page: page.offset, _perPage: 10}) // Thêm các tham số truy vấn nếu cần thiết
       .set('Authorization', 'Bearer your_token') // Thêm header nếu cần thiết
       .end((err, res) => {

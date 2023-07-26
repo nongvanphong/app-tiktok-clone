@@ -7,11 +7,24 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
+import React, {
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+} from 'react';
 
 import Item from './item';
 import {Index} from './../../../index';
 import LoadMore from '../../../components/load/loadMore/LoadMore';
+import {FetchVideo} from '../../../../servers/video/FetchVideo';
+import RNFS from 'react-native-fs';
+
+import {InterfaceVideo} from '../../../../interface/InterfaceVideo';
+import {api, http} from '../../../../servers/api/api';
+import Comment from '../../../components/Comment/Comment';
+import HomeContext from '../../../../Context/HomeContext';
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 interface videos {
@@ -20,31 +33,12 @@ interface videos {
   pause: boolean;
 }
 
-const ListItem = () => {
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // hàm lưu vị trí video đnag phát
+const ListItem = React.memo(() => {
+  const [currentVideoIndex, setCurrentVideoIndex] = useState<number>(0); // hàm lưu vị trí video đnag phát
   const [isLoading, setIsLoading] = useState(false);
-  const [videoList, setVideoList] = useState<videos[]>([
-    {
-      id: 1,
-      uri: 'http://192.168.1.104:1234/videos/single?video=videos_temp/b.mp4',
-      pause: true,
-    },
-    {
-      id: 2,
-      uri: 'http://192.168.1.104:1234/videos/single?video=videos_temp/a.mp4',
-      pause: true,
-    },
-    {
-      id: 3,
-      uri: 'http://192.168.1.104:1234/videos/single?video=videos_temp/d.mp4',
-      pause: true,
-    },
-    {
-      id: 4,
-      uri: 'http://192.168.1.104:1234/videos/single?video=videos_temp/c.mp4',
-      pause: true,
-    },
-
+  const [isLoadingScreen, setIsLoadingScreen] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [videoList, setVideoList] = useState<InterfaceVideo[]>([
     // Thêm các video khác vào đây
   ]);
 
@@ -55,50 +49,114 @@ const ListItem = () => {
         pause: index === currentVideoIndex,
       })),
     );
-  }, [currentVideoIndex]);
+  }, [currentVideoIndex, isLoadingScreen]);
 
-  const loadMoreItems = () => {
-    console.log('=> laod');
-    if (isLoading) return;
-    setIsLoading(true);
-    // Simulate API request
-    setTimeout(() => {
-      console.log('here');
-    }, 3000);
+  const handlClickPause = (pause: boolean, i: number) => {
+    setVideoList(prevVideoList => {
+      const updatedVideoList = [...prevVideoList]; // Tạo bản sao của mảng
+      if (updatedVideoList.length > 1) {
+        // Kiểm tra mảng có ít nhất 2 phần tử
+        updatedVideoList[i].pause = pause; // Cập nhật giá trị tại vị trí số 1 thành false
+      }
+      return updatedVideoList; // Trả về mảng đã được cập nhật
+    });
   };
 
+  const loadMoreItems = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      console.log('--số trang load->', currentVideoIndex);
+      const nextPage = currentPage + 1;
+      const result = await FetchVideo.GetAll(nextPage);
+      setVideoList(prevList => [...prevList, ...result.data]);
+
+      setCurrentPage(nextPage);
+    } catch (error) {
+      console.error('Error loading more items:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const getVideo = async () => {
+      try {
+        const result = await FetchVideo.GetAll(currentPage);
+
+        setVideoList(result.data);
+
+        setIsLoadingScreen(true);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    getVideo();
+  }, []);
+  const {ishowcmt, setIsCmtShown} = useContext(HomeContext);
+
   return (
-    <View>
-      <FlatList
-        style={styles.list}
-        data={videoList}
-        renderItem={({item, index}) => (
-          <Item id={item.id} uri={item.uri} pause={item.pause} />
-        )}
-        // horizontal
-        pagingEnabled
-        onScrollToIndexFailed={() => {}}
-        showsVerticalScrollIndicator={false}
-        // viewabilityConfig={{viewAreaCoveragePercentThreshold: 100}}
-        // lấy vị trí scroll
-        onScroll={event => {
-          const offsetY = event.nativeEvent.contentOffset.y;
-          const index = Math.round(offsetY / styles.list.height);
-          setCurrentVideoIndex(index);
-        }}
-        ListFooterComponent={LoadMore}
-        onEndReached={loadMoreItems}
-        onEndReachedThreshold={0.2} // Tùy chỉnh ngưỡng tại đây (vd: 0.8 là 80% còn lại của danh sách)
-      />
+    <View style={{backgroundColor: '#000'}}>
+      {isLoadingScreen ? (
+        <FlatList
+          style={styles.list}
+          data={videoList}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => (
+            <Item
+              id={item.id}
+              namevideo={item.videouri}
+              iduser={item.User?.id}
+              index={index}
+              pause={item.pause}
+              tag={item.videotag}
+              userName={item.User?.username}
+              videoDescrible={item.videodescrible}
+              createdAt={item.createdAt}
+              handlClick={handlClickPause}
+              uriVideo={http + '/' + item.userid + '/' + item.videouri}
+              comment_number={item.cmt_number}
+              like_number={item.like_number}
+            />
+          )}
+          // horizontal
+          pagingEnabled
+          onScrollToIndexFailed={() => {}}
+          showsVerticalScrollIndicator={false}
+          // viewabilityConfig={{viewAreaCoveragePercentThreshold: 100}}
+          // lấy vị trí scroll
+          onScroll={event => {
+            const offsetY = event.nativeEvent.contentOffset.y;
+            const index = Math.round(offsetY / styles.list.height);
+            setCurrentVideoIndex(index);
+          }}
+          ListFooterComponent={LoadMore}
+          onEndReached={loadMoreItems}
+          onEndReachedThreshold={2}
+        />
+      ) : (
+        <View
+          style={{
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <LoadMore></LoadMore>
+        </View>
+      )}
+      {ishowcmt && <Comment />}
     </View>
   );
-};
+});
 
 export default ListItem;
 
 const styles = StyleSheet.create({
   list: {
     // marginBottom: 60,
-    height: windowHeight,
+    height: windowHeight - 60,
+    //flex: 1,
   },
 });

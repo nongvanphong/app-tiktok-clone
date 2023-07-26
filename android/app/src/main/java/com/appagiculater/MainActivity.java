@@ -1,5 +1,5 @@
 package com.appagiculater;
-
+// import com.rnfs.RNFSPackage; 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
@@ -26,6 +26,8 @@ public class MainActivity extends ReactActivity {
     return new DefaultReactActivityDelegate(
         this,
         getMainComponentName(),
+        // new MainReactPackage(), // <---- add comma
+        // new RNFSPackage(), // <---------- add package
         // If you opted-in for the New Architecture, we enable the Fabric Renderer.
         DefaultNewArchitectureEntryPoint.getFabricEnabled());
   }

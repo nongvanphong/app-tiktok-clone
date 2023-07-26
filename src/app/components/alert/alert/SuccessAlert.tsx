@@ -1,10 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Modal, StyleSheet} from 'react-native';
 import Lottie from 'lottie-react-native';
-
-const SuccessAlert = ({visible, title, message, onClose}) => {
+type Type = {
+  onclick: () => void;
+  title?: string;
+  describle?: string;
+  visible: boolean;
+};
+const SuccessAlert = (props: Type) => {
+  const handlClick = () => {
+    props.onclick();
+  };
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <Modal visible={props.visible} transparent animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.alertContainer}>
           <Lottie
@@ -13,10 +21,16 @@ const SuccessAlert = ({visible, title, message, onClose}) => {
             loop
             source={require('../../../../../assets/json/successful.json')}
           />
-          <Text>title</Text>
-          <Text>describe</Text>
-          <TouchableOpacity style={styles.bnt}>
-            <Text>Ok</Text>
+          <Text style={{fontSize: 20, fontWeight: '500', marginVertical: 10}}>
+            {props.title}
+          </Text>
+          <Text style={{fontSize: 16, marginBottom: 30}}>
+            {props.describle}
+          </Text>
+          <TouchableOpacity style={styles.bnt} onPress={handlClick}>
+            <Text style={{fontSize: 16, fontWeight: '500', marginVertical: 10}}>
+              Ok
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -41,8 +55,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bnt: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 50,
+    paddingVertical: 5,
     backgroundColor: '#007AFF',
     alignSelf: 'center',
     borderRadius: 15,

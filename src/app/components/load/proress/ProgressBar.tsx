@@ -8,29 +8,7 @@ type typeProgress = {
   timeStart: number;
   timeEnd: number;
 };
-const ProgressBar = (props: typeProgress) => {
-  // const [progress, setProgress] = useState(0.0);
-  // const [time, setTime] = useState(0);
-  // const [timeEnd, setTimeEnd] = useState(30);
-
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     if (time > 10) return clearInterval(timer);
-  //     setTime(prevTime => prevTime + 1);
-  //   }, 1000);
-
-  //   return () => {
-  //     clearInterval(timer);
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   setProgress(time / 1);
-  // }, [time]);
-
-  // const handleSliderChange = value => {
-  //   setTime(Math.floor(value * 10));
-  // };
+const ProgressBar = React.memo((props: typeProgress) => {
   return (
     <View style={styles.container}>
       <Slider
@@ -49,7 +27,7 @@ const ProgressBar = (props: typeProgress) => {
       </Text> */}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

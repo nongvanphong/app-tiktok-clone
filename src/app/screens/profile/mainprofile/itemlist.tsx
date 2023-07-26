@@ -1,6 +1,7 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import CustomSwitch from '../../../components/customSwitch/customSwitch';
+import {LocalStorage} from '../../../localStorage/LocalStorage';
 
 type typerItemList = {
   index?: number;
@@ -10,9 +11,25 @@ type typerItemList = {
 };
 
 const Itemlist = (props: typerItemList) => {
+  const logout = async (index: number) => {
+    switch (index) {
+      case 0:
+        break;
+      case 1:
+        break;
+      case 2:
+        LocalStorage.removeData('user');
+        break;
+      default:
+    }
+  };
   return (
     <View>
-      <TouchableOpacity disabled={props.index == 0 ? true : false}>
+      <TouchableOpacity
+        disabled={props.index == 0 ? true : false}
+        onPress={() => {
+          logout(props.index);
+        }}>
         <View
           style={[
             styles.container,

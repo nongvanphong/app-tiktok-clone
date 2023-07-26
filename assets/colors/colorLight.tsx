@@ -1,12 +1,16 @@
 export const ColorLight = {
   // background
-  pkBg: '#ff8600',
+  pkBg: '#fff',
   //text
-  Pktxt: '#ff8600',
+  textWhite: '#fff',
+  textBlack: '#000',
   txtbl: '#000000',
 
   //button
   bnt: '#ff8600',
+  bntOk: '#fe2c55',
+  bntfail: '#f1f1f2',
+  bntblack: '#000',
 
   // item
   bgItemGreen: '#82F528',

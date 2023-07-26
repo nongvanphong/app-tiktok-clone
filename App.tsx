@@ -8,6 +8,7 @@
 import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Dimensions,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -31,7 +32,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './src/app/screens/login/login';
 import Home from './src/app/screens/home/home';
 import Buttombar from './src/app/components/buttombar/buttombar';
-
+const windowHeight = Dimensions.get('window').height;
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
@@ -41,24 +42,57 @@ function App(): JSX.Element {
 
   const backgroundStyle = {
     // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    backgroundColor: isDarkMode ? '#000' : '#fff',
+    backgroundColor: isDarkMode ? '#000' : '#000',
   };
 
   return (
     <SafeAreaView style={[backgroundStyle, styles.SafeAreaViewContainer]}>
       {/* <Learns.Lap1></Learns.Lap1> */}
+
       {/* <Index.Home /> */}
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="Login"
+            name="home"
             component={Buttombar}
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="home"
-            component={Buttombar}
+            name="selectvideo"
+            component={Index.SelectVideoScreen}
             options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="livevideo"
+            component={Index.LiveVideoScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerShown: true,
+              title: 'Đăng kí',
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="Login1"
+            component={Index.Logins}
+            options={{
+              headerShown: true,
+              title: 'Đăng nhập',
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Index.Register}
+            options={{
+              headerShown: true,
+              title: 'Đăng kí',
+              headerTitleAlign: 'center',
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>
@@ -68,7 +102,8 @@ function App(): JSX.Element {
 
 const styles = StyleSheet.create({
   SafeAreaViewContainer: {
-    flex: 1,
+    height: windowHeight,
+    backgroundColor: '#000',
   },
 });
 

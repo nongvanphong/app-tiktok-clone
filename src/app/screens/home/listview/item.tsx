@@ -17,19 +17,35 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import * as Progress from 'react-native-progress';
 import ProgressBar from '../../../components/load/proress/ProgressBar';
+import ButtomVideo from '../../../components/item/ItemVideo/ButtomVideo';
+import RNFS from 'react-native-fs';
+import {http} from './../../../../servers/api/api';
+import Comment from '../../../components/Comment/Comment';
+
 type types = {
-  id: number;
-  uri: string;
-  pause: boolean;
+  id?: number;
+
+  pause?: boolean;
+  createdAt?: string;
+  videoDescrible?: string;
+  userName?: string;
+  tag?: string;
+  handlClick: (pause: boolean, i: number) => void;
+  index: number;
+  iduser?: number;
+  namevideo?: string;
+  uriVideo?: string;
+  like_number?: number;
+  comment_number?: number;
 };
-const Item = (props: types) => {
+const Item = React.memo((props: types) => {
   const playerRef = useRef(null);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const [videoDuration, setVideoDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isLottieVisible, setIsLottieVisible] = useState(false);
   const [clickCount, setClickCount] = useState(0);
+  const [uris, setUris] = useState<string>();
 
   useEffect(() => {
     // Đặt một khoảng thời gian (vd: 3 giây) trước khi biến mất phần tử Lottie
@@ -42,10 +58,9 @@ const Item = (props: types) => {
       clearTimeout(timeout);
     };
   }, [isLottieVisible]);
-  const puseVideo = () => {
-    console.log('=>', isVideoPlaying);
-    setClickCount(prevCount => prevCount + 1);
 
+  const puseVideo = () => {
+    setClickCount(prevCount => prevCount + 1);
     if (clickCount === 0) {
       setTimeout(() => {
         setClickCount(0);
@@ -54,15 +69,14 @@ const Item = (props: types) => {
       // Người dùng đã nhấp chuột hai lần liên tiếp
       console.log('Người dùng đã nhấp chuột hai lần liên tiếp');
       // Thực hiện các hành động khác tại đây
-      setIsVideoPlaying(true);
+      props.handlClick(true, props.index);
       return setIsLottieVisible(true);
     }
-
-    if (isVideoPlaying == true) {
-      setIsVideoPlaying(false);
+    if (props.pause == true) {
+      props.handlClick(false, props.index);
     }
-    if (isVideoPlaying == false) {
-      setIsVideoPlaying(true);
+    if (props.pause == false) {
+      props.handlClick(true, props.index);
     }
   };
 
@@ -101,18 +115,19 @@ const Item = (props: types) => {
         activeOpacity={1}
         underlayColor="transparent"
         onPress={() => puseVideo()}>
-        <View style={styles.backgroundVideo}>
+        <View style={styles.backgroundVideos}>
           <Video
             source={{
-              uri: props.uri,
+              uri: props.uriVideo,
             }}
             ref={playerRef}
             onBuffer={onBuffer}
             onError={videoError}
             style={styles.backgroundVideo}
-            resizeMode="cover"
+            resizeMode="contain"
             // paused={!isVideoPlaying} // dùng vidoe
-            paused={!props.pause || !isVideoPlaying}
+            paused={!props.pause}
+            //paused={true}
             repeat={true}
             onend={videoEnd}
             onProgress={handleOnProgress}
@@ -120,6 +135,12 @@ const Item = (props: types) => {
             onPlaybackRateChange={handlePlaybackRateChange} // Xử lý sự kiện khi tốc độ phát video thay đổi
             playWhenInactive={false} // tạm dừng video vẫn hiển thị
             preLoad="none" // Không tải dữ liệu cho video
+            bufferConfig={{
+              minBufferMs: 5000,
+              maxBufferMs: 15000,
+              bufferForPlaybackMs: 1000,
+              bufferForPlaybackAfterRebufferMs: 1000,
+            }}
           />
           <View style={styles.favourite}>
             {isLottieVisible && (
@@ -134,23 +155,38 @@ const Item = (props: types) => {
         </View>
       </TouchableHighlight>
       <ProgressBar timeStart={currentTime} timeEnd={videoDuration} />
-      <TouchItem />
-
-      {/* <Text>{`Duration: ${videoDuration.toFixed(2)}`}</Text>
-      <Text>{`Current Time: ${currentTime.toFixed(2)}`}</Text> */}
+      <TouchItem
+        like_number={props.like_number}
+        comment_number={props.comment_number}
+        videoId={props.id ? props.id : 0}
+      />
+      <ButtomVideo
+        msg={props.videoDescrible ? props.videoDescrible : ''}
+        tag={props.tag ? props.tag : ''}
+        userName={props.userName ? props.userName : ''}
+        date={props.createdAt ? props.createdAt : ''}
+      />
     </View>
   );
-};
+});
 
 export default Item;
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: windowHeight,
+    height: windowHeight - 60,
   },
   backgroundVideo: {
-    flex: 1,
+    width: windowWidth,
+    height: windowHeight - 60,
+    backgroundColor: '#000',
+  },
+  backgroundVideos: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    //marginBottom: 100,
   },
   pauVideo: {
     position: 'absolute',

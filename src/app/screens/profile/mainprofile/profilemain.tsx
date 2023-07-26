@@ -1,13 +1,54 @@
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+
 import Itemfeedback from './itemfeedback';
-import Bottomprofile from './../bottomprofile';
 import Itemname from './itemname';
 import {Index} from './../../../index';
+import Bottomprofile from './../bottom/bottomprofile';
+import LoginAlert from '../../../components/alert/alert/LoginAlert';
+import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {User} from '../../../../interface/InterfaceUser';
+import {LocalStorage} from '../../../localStorage/LocalStorage';
 
 const dataTest = [123, 333, 666];
 
 const Profilemain = () => {
+  const navigater = useNavigation();
+  const [isShow, setIshow] = useState<boolean>(true);
+
+  useEffect(() => {
+    const getData = async () => {
+      const data: User = await LocalStorage.getData('user');
+      if (!data) return setIshow(true);
+      setIshow(false);
+    };
+
+    getData();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigater.addListener('focus', () => {
+      const getData = async () => {
+        const data: User = await LocalStorage.getData('user');
+        if (!data) return setIshow(true);
+        setIshow(false);
+      };
+      getData();
+    });
+
+    return unsubscribe;
+  }, [navigater]);
+
+  const bntRegister = () => {
+    setIshow(false);
+    navigater.navigate('Login');
+  };
+  const bntSkip = () => {
+    setIshow(false);
+    navigater.goBack();
+  };
+
   return (
     <ScrollView
       style={{
@@ -37,6 +78,12 @@ const Profilemain = () => {
           ))}
         </View>
         <Bottomprofile />
+        <LoginAlert
+          title="Bạn chưa có tài khoản"
+          bntSkip={bntSkip}
+          bntRegister={bntRegister}
+          visible={isShow}
+        />
       </View>
     </ScrollView>
   );
@@ -67,5 +114,14 @@ const styles = StyleSheet.create({
   img: {
     width: '100%',
     height: '100%',
+  },
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: 'grey',
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
 });
