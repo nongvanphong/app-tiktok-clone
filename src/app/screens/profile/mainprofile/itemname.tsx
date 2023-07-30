@@ -1,8 +1,10 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {ColorLight} from '../../../../../assets/colors/colorLight';
-
-const Itemname = () => {
+type types = {
+  name?: string;
+};
+const Itemname = (p: types) => {
   return (
     <View
       style={[
@@ -22,7 +24,7 @@ const Itemname = () => {
           style={styles.icon}
           source={require('../../../../../assets/iconpng/vip.png')}
         />
-        <Text style={styles.text}>phong phong</Text>
+        <Text style={styles.text}>{p.name}</Text>
       </View>
     </View>
   );

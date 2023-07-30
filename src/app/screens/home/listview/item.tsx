@@ -37,6 +37,7 @@ type types = {
   uriVideo?: string;
   like_number?: number;
   comment_number?: number;
+  your_like?: number;
 };
 const Item = React.memo((props: types) => {
   const playerRef = useRef(null);
@@ -159,6 +160,7 @@ const Item = React.memo((props: types) => {
         like_number={props.like_number}
         comment_number={props.comment_number}
         videoId={props.id ? props.id : 0}
+        your_like={props.your_like ? props.your_like : 1}
       />
       <ButtomVideo
         msg={props.videoDescrible ? props.videoDescrible : ''}

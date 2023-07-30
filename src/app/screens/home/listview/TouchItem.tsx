@@ -1,36 +1,69 @@
 import {StyleSheet, Image, View, Text, TouchableOpacity} from 'react-native';
 import React, {useState, useContext} from 'react';
-import Lottie from 'lottie-react-native';
+import {useNavigation} from '@react-navigation/native';
+
 import HomeContext from '../../../../Context/HomeContext';
+import {FetchFavourite} from '../../../../servers/Favourite/FetchFavourite';
+import {LocalStorage} from '../../../localStorage/LocalStorage';
+import {User} from '../../../../interface/InterfaceUser';
+import LoginAlert from '../../../components/alert/alert/LoginAlert';
 type Typer = {
   like_number?: number;
   comment_number?: number;
-
   videoId: number;
+  your_like: number;
 };
 const TouchItem = React.memo((prosp: Typer) => {
   const {setVideoID, setIsCmtShown} = useContext(HomeContext);
-  const [isLike, setIsLike] = useState(false);
-
+  const navigater = useNavigation();
+  const [showDilog, setshowDilog] = useState<InterfaceAlert[]>({
+    write: false,
+    fail: false,
+    sussecc: false,
+    login: false,
+  });
   const [data, setData] = useState<Typer>({
     like_number: prosp.like_number,
     comment_number: prosp.comment_number,
     videoId: prosp.videoId,
+    your_like: prosp.your_like,
   });
-  const like = () => {
-    if (data.like_number == undefined || data.like_number < 0) return;
-    if (isLike) {
-      let a = data.like_number - 1;
-      setData({...data, like_number: a});
-      return setIsLike(false);
+  const like = async () => {
+    const user: User = await LocalStorage.getData('user');
+    if (!user || !user.id) {
+      return setshowDilog(prevState => ({
+        ...prevState,
+        login: true,
+      }));
     }
-    if (!isLike) {
+
+    if (data.like_number == undefined || data.like_number < 0) return;
+    if (data.your_like == 0) {
+      const result = await FetchFavourite.Favourite(user.id, data.videoId);
+      if (result.status != 200) {
+        return console.log('-------erro favourite-----');
+      }
+      let a = data.like_number - 1;
+      setData({...data, like_number: a, your_like: 1});
+      return;
+    }
+    if (data.your_like == 1) {
+      const result = await FetchFavourite.Favourite(user.id, data.videoId);
+      if (result.status != 200) {
+        return console.log('-------erro favourite-----');
+      }
       let a = data.like_number + 1;
-      setData({...data, like_number: a});
-      return setIsLike(true);
+      setData({...data, like_number: a, your_like: 0});
+      return;
     }
   };
-
+  const bntRegister = () => {
+    setshowDilog(prevState => ({...prevState, login: false}));
+    navigater.navigate('Login');
+  };
+  const bntSkip = () => {
+    setshowDilog(prevState => ({...prevState, login: false}));
+  };
   const comment = () => {
     setVideoID(prosp.videoId);
     setIsCmtShown(true);
@@ -49,7 +82,7 @@ const TouchItem = React.memo((prosp: Typer) => {
           </TouchableOpacity>
         </View>
         <View style={styles.flex}>
-          {isLike ? (
+          {data.your_like == 0 ? (
             <TouchableOpacity onPress={like}>
               <Image
                 source={require('../../../../../assets/iconpng/favourite.png')}
@@ -74,6 +107,12 @@ const TouchItem = React.memo((prosp: Typer) => {
           <Text style={styles.textColor}>{prosp.comment_number}</Text>
         </View>
       </View>
+      <LoginAlert
+        title="Bạn chưa có tài khoản"
+        bntSkip={bntSkip}
+        bntRegister={bntRegister}
+        visible={showDilog.login}
+      />
     </View>
   );
 });

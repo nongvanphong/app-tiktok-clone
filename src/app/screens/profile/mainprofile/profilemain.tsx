@@ -10,17 +10,27 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {User} from '../../../../interface/InterfaceUser';
 import {LocalStorage} from '../../../localStorage/LocalStorage';
+import {http} from '../../../../servers/api/api';
 
 const dataTest = [123, 333, 666];
 
 const Profilemain = () => {
   const navigater = useNavigation();
   const [isShow, setIshow] = useState<boolean>(true);
+  const [data, setData] = useState<User>({
+    id: -1,
+    userid: 'Tik tok',
+    email: 'Chưa đăng nhập',
+    password: 'Chưa đăng nhập',
+    username: 'Chưa đăng nhập',
+    userimage: 'null',
+  });
 
   useEffect(() => {
     const getData = async () => {
       const data: User = await LocalStorage.getData('user');
       if (!data) return setIshow(true);
+      setData(data);
       setIshow(false);
     };
 
@@ -32,6 +42,7 @@ const Profilemain = () => {
       const getData = async () => {
         const data: User = await LocalStorage.getData('user');
         if (!data) return setIshow(true);
+        setData(data);
         setIshow(false);
       };
       getData();
@@ -61,13 +72,24 @@ const Profilemain = () => {
       <View>
         <View style={[styles.flexR, styles.justifyCenter]}>
           <View style={[styles.avt, styles.brRadiusAll]}>
-            <Image
-              style={[styles.img, styles.brRadiusAll]}
-              source={require('../../../../../assets/images/a.jpg')}
-            />
+            {data.userimage || data.userimage != '' ? (
+              <Image
+                style={[styles.img, styles.brRadiusAll]}
+                source={{
+                  uri: `${http}/images_Max/${data.id}/${data.userimage}`,
+                }}
+              />
+            ) : (
+              <Image
+                style={[styles.img, styles.brRadiusAll]}
+                source={{
+                  uri: `${http}/default/tiktokmax.png`,
+                }}
+              />
+            )}
           </View>
         </View>
-        <Itemname />
+        <Itemname name={data.username} />
         <View style={[{marginVertical: 20}, styles.flexR, styles.justifySp]}>
           {dataTest.map((e, Index) => (
             <Itemfeedback

@@ -15,4 +15,5 @@ export interface InterfaceVideo {
   uri?: string;
   like_number?: number;
   cmt_number?: number;
+  your_liked?: number;
 }

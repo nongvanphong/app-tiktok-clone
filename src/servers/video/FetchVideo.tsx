@@ -1,9 +1,9 @@
 import {types} from '@babel/core';
 import {api} from '../api/api';
 
-const GetAll = async (page: number) => {
+const GetAll = async (page: number, myid?: number) => {
   try {
-    const response = await api.get('/videos/all', {params: {page}});
+    const response = await api.get('/videos/all', {params: {page, myid}});
     return response.data;
   } catch (error) {
     console.log('Error fetching users:', error);

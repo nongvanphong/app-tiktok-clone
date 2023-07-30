@@ -5,9 +5,10 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {createContext, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Button,
   Dimensions,
   SafeAreaView,
   ScrollView,
@@ -32,11 +33,17 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './src/app/screens/login/login';
 import Home from './src/app/screens/home/home';
 import Buttombar from './src/app/components/buttombar/buttombar';
+import Toast from 'react-native-toast-message';
+import {useContext} from 'react';
 const windowHeight = Dimensions.get('window').height;
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 const Stack = createNativeStackNavigator();
+
+// Tạo Context
+export const MyAlertContext = createContext<MyAlert>({} as MyAlert);
+
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -45,58 +52,100 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? '#000' : '#000',
   };
 
+  const showToast = (title: string, type: string, msg: string) => {
+    Toast.show({
+      type: type,
+      text1: title,
+      text2: msg,
+      visibilityTime: 1000,
+    });
+  };
   return (
-    <SafeAreaView style={[backgroundStyle, styles.SafeAreaViewContainer]}>
-      {/* <Learns.Lap1></Learns.Lap1> */}
+    <MyAlertContext.Provider value={{showToast}}>
+      <SafeAreaView style={[backgroundStyle, styles.SafeAreaViewContainer]}>
+        {/* <Learns.Lap1></Learns.Lap1> */}
 
-      {/* <Index.Home /> */}
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="home"
-            component={Buttombar}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="selectvideo"
-            component={Index.SelectVideoScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="livevideo"
-            component={Index.LiveVideoScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{
-              headerShown: true,
-              title: 'Đăng kí',
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="Login1"
-            component={Index.Logins}
-            options={{
-              headerShown: true,
-              title: 'Đăng nhập',
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="Register"
-            component={Index.Register}
-            options={{
-              headerShown: true,
-              title: 'Đăng kí',
-              headerTitleAlign: 'center',
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
+        {/* <Index.Home /> */}
+        <NavigationContainer>
+          <View>
+            <View style={{zIndex: 100}}>
+              <Toast />
+            </View>
+          </View>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="home"
+              component={Buttombar}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="selectvideo"
+              component={Index.SelectVideoScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="livevideo"
+              component={Index.LiveVideoScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{
+                headerShown: true,
+                title: 'Đăng kí',
+                headerTitleAlign: 'center',
+              }}
+            />
+            <Stack.Screen
+              name="Login1"
+              component={Index.Logins}
+              options={{
+                headerShown: true,
+                title: 'Đăng nhập',
+                headerTitleAlign: 'center',
+              }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Index.Register}
+              options={{
+                headerShown: true,
+                title: 'Đăng kí',
+                headerTitleAlign: 'center',
+              }}
+            />
+            <Stack.Screen
+              name="Setting"
+              component={Index.Setting}
+              options={{
+                headerShown: true,
+                title: 'Cài đặt',
+                headerTitleAlign: 'center',
+              }}
+            />
+            <Stack.Screen
+              name="update name"
+              component={Index.UpdateName}
+              options={{
+                headerShown: true,
+                title: 'Tên',
+                headerTitleAlign: 'center',
+              }}
+            />
+            <Stack.Screen
+              name="update password"
+              component={Index.UpdatePassword}
+              options={{
+                headerShown: true,
+                title: 'Mật khẩu',
+                headerTitleAlign: 'center',
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
+    </MyAlertContext.Provider>
   );
 }
 

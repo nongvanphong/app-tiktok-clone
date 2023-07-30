@@ -28,11 +28,8 @@ const ItemCmt = (p: types) => {
     };
     getUser();
   }, []);
-  const hanldeUpdate = async () => {
-    console.log('update');
-  };
+
   const hanlDelete = async (commentId: number, myId: number) => {
-    console.log('hanlDelete', commentId);
     if (!(await p.handleDelete(commentId, myId))) {
       setshowDilog(prevState => ({
         ...prevState,
@@ -64,13 +61,6 @@ const ItemCmt = (p: types) => {
           <Text style={[styles.text, styles.txtName]}>{p.name}</Text>
           {myId === p.userId ? (
             <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                style={{marginRight: 10}}
-                onPress={hanldeUpdate}>
-                <Image
-                  source={require('../../../../../assets/iconpng/write.png')}
-                  style={styles.icon}></Image>
-              </TouchableOpacity>
               <TouchableOpacity onPress={() => hanlDelete(p.commentId, myId)}>
                 <Image
                   source={require('../../../../../assets/iconpng/delete.png')}

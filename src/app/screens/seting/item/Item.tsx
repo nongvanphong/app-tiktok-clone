@@ -1,32 +1,29 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState, useContext} from 'react';
+import React from 'react';
 import CustomSwitch from '../../../components/customSwitch/customSwitch';
 import {LocalStorage} from '../../../localStorage/LocalStorage';
 import {useNavigation} from '@react-navigation/native';
-import {User} from '../../../../interface/InterfaceUser';
-import {MyAlertContext} from '../../../../../App';
 
-type typerItemList = {
-  index?: number;
+type typer = {
+  index: number;
   img1: any;
-  txt: string;
-  img2: any;
+  txt1: string;
+  txt2: string;
+  myId: number;
 };
 
-const Itemlist = (props: typerItemList) => {
+const ItemSetting = (props: typer) => {
   const navigater = useNavigation();
-  const {showToast} = useContext(MyAlertContext);
   const logout = async (index: number) => {
     switch (index) {
       case 0:
+        navigater.navigate('update name', {name: props.txt2, id: props.myId});
+
         break;
       case 1:
-        navigater.navigate('Setting');
+        navigater.navigate('update password', {id: props.myId});
         break;
       case 2:
-        LocalStorage.removeData('user');
-        navigater.navigate('home');
-        showToast('Thông báo', 'success', 'Đăng xuất thành công');
         break;
       default:
     }
@@ -34,7 +31,6 @@ const Itemlist = (props: typerItemList) => {
   return (
     <View>
       <TouchableOpacity
-        disabled={props.index == 0 ? true : false}
         onPress={() => {
           logout(props.index);
         }}>
@@ -45,22 +41,19 @@ const Itemlist = (props: typerItemList) => {
             styles.justifySp,
             styles.alCenter,
           ]}>
+          <Text style={styles.mgR}>{props.txt1}</Text>
+
           <View style={[styles.container, styles.flexR, styles.alCenter]}>
+            <Text style={styles.mgR}>{props.txt2}</Text>
             <Image style={styles.icon} source={props.img1} />
-            <Text style={styles.mgL}>{props.txt}</Text>
           </View>
-          {props.index == 0 ? (
-            <CustomSwitch />
-          ) : (
-            <Image style={styles.icon} source={props.img2} />
-          )}
         </View>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default Itemlist;
+export default ItemSetting;
 
 const styles = StyleSheet.create({
   container: {
@@ -80,10 +73,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   icon: {
-    width: 20,
-    height: 20,
+    width: 15,
+    height: 15,
+    tintColor: 'gray',
   },
-  mgL: {
-    marginLeft: 10,
+  mgR: {
+    marginRight: 10,
   },
 });

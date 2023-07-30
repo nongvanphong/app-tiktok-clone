@@ -4,6 +4,9 @@ import SelectVideoScreen from './screens/videocreen/SelectVideoScreen';
 import LiveVideoScreen from './screens/videocreen/LiveVideoScreen';
 import Logins from './screens/login/Logins';
 import Register from './screens/login/Register';
+import Setting from './screens/seting/Setting';
+import UpdateName from './screens/seting/UpdateName';
+import UpdatePassword from './screens/seting/UpdatePassword';
 export const Index = {
   Login,
   Home,
@@ -11,4 +14,7 @@ export const Index = {
   LiveVideoScreen,
   Logins,
   Register,
+  Setting,
+  UpdateName,
+  UpdatePassword,
 };

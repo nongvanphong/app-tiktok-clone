@@ -8,6 +8,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import React from 'react';
+import Toast from 'react-native-toast-message';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Profile from '../../screens/profile/profile';
@@ -16,28 +17,56 @@ import Home from '../../screens/home/home';
 import Add from '../../screens/add/Add';
 
 const Tab = createBottomTabNavigator();
+const A = () => {
+  const showToast = () => {
+    console.log('pppp');
+    Toast.show({
+      type: 'success',
+      text1: 'Hello',
+      text2: 'This is some something 👋',
+      visibilityTime: 1000,
+    });
+  };
+  const showToast1 = () => {
+    console.log('pppp');
+    Toast.show({
+      type: 'error',
+      text1: 'Hello',
+      text2: 'This is some something 👋',
+      visibilityTime: 1000,
+    });
+  };
+  return (
+    <View style={{flex: 1, backgroundColor: 'green'}}>
+      <View style={{zIndex: 100}}>
+        <Toast />
+      </View>
+      <Text>kkk</Text>
 
+      <Button title="Show toast" onPress={showToast} />
+      <Button title="Show toast1" onPress={showToast1} />
+    </View>
+  );
+};
 const Buttombar = React.memo(() => {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-
+        // tabBarStyle: {
+        //   height: 70,
+        //   backgroundColor: 'rgba(0, 0, 0 ,1)',
+        //   borderTopWidth: 2,
+        //   borderColor: '#ffff',
+        // },
         tabBarStyle: {
-          // position: 'absolute',
-          // bottom: 25,
-          // left: 20,
-          // right: 20,
-          //borderRadius: 20,
-          // borderTopRightRadius: 20,
-          // borderTopLeftRadius: 20,
-          height: 60,
-          // paddingBottom: 10,
+          height: 70,
           backgroundColor: 'rgba(0, 0, 0 ,1)',
-          // ...styles.shadow,
           borderTopWidth: 2,
           borderColor: '#ffff',
+          position: 'absolute',
+          bottom: 0,
         },
       }}>
       <Tab.Screen

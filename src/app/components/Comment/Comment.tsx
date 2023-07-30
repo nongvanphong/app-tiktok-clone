@@ -91,6 +91,7 @@ const Comment = () => {
     setData(prevList => prevList.filter(item => item.id !== commentId));
     return true;
   };
+
   return (
     <View style={styles.container}>
       <View style={{flex: 1}}>

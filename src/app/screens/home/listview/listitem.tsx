@@ -25,6 +25,8 @@ import {InterfaceVideo} from '../../../../interface/InterfaceVideo';
 import {api, http} from '../../../../servers/api/api';
 import Comment from '../../../components/Comment/Comment';
 import HomeContext from '../../../../Context/HomeContext';
+import {User} from '../../../../interface/InterfaceUser';
+import {LocalStorage} from '../../../localStorage/LocalStorage';
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 interface videos {
@@ -66,9 +68,10 @@ const ListItem = React.memo(() => {
     if (isLoading) return;
     setIsLoading(true);
     try {
+      const user: User = await LocalStorage.getData('user');
       console.log('--số trang load->', currentVideoIndex);
       const nextPage = currentPage + 1;
-      const result = await FetchVideo.GetAll(nextPage);
+      const result = await FetchVideo.GetAll(nextPage, user ? user.id : -1);
       setVideoList(prevList => [...prevList, ...result.data]);
 
       setCurrentPage(nextPage);
@@ -82,13 +85,16 @@ const ListItem = React.memo(() => {
   useEffect(() => {
     const getVideo = async () => {
       try {
-        const result = await FetchVideo.GetAll(currentPage);
-
+        const user: User = await LocalStorage.getData('user');
+        const result = await FetchVideo.GetAll(
+          currentPage,
+          user ? user.id : -1,
+        );
         setVideoList(result.data);
 
         setIsLoadingScreen(true);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching video:', error);
       }
     };
 
@@ -118,6 +124,7 @@ const ListItem = React.memo(() => {
               uriVideo={http + '/' + item.userid + '/' + item.videouri}
               comment_number={item.cmt_number}
               like_number={item.like_number}
+              your_like={item.your_liked}
             />
           )}
           // horizontal
