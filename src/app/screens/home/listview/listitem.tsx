@@ -90,6 +90,7 @@ const ListItem = React.memo(() => {
           currentPage,
           user ? user.id : -1,
         );
+
         setVideoList(result.data);
 
         setIsLoadingScreen(true);
@@ -117,7 +118,8 @@ const ListItem = React.memo(() => {
               index={index}
               pause={item.pause}
               tag={item.videotag}
-              userName={item.User?.username}
+              // userName={item.User?.username}
+              userName={item.username}
               videoDescrible={item.videodescrible}
               createdAt={item.createdAt}
               handlClick={handlClickPause}
@@ -125,6 +127,8 @@ const ListItem = React.memo(() => {
               comment_number={item.cmt_number}
               like_number={item.like_number}
               your_like={item.your_liked}
+              myId={item.userid}
+              image={item.userimage}
             />
           )}
           // horizontal

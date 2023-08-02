@@ -15,12 +15,9 @@ import Lottie from 'lottie-react-native';
 import TouchItem from './TouchItem';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-import * as Progress from 'react-native-progress';
+
 import ProgressBar from '../../../components/load/proress/ProgressBar';
 import ButtomVideo from '../../../components/item/ItemVideo/ButtomVideo';
-import RNFS from 'react-native-fs';
-import {http} from './../../../../servers/api/api';
-import Comment from '../../../components/Comment/Comment';
 
 type types = {
   id?: number;
@@ -38,6 +35,8 @@ type types = {
   like_number?: number;
   comment_number?: number;
   your_like?: number;
+  myId?: number;
+  image?: string;
 };
 const Item = React.memo((props: types) => {
   const playerRef = useRef(null);
@@ -46,8 +45,11 @@ const Item = React.memo((props: types) => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isLottieVisible, setIsLottieVisible] = useState(false);
   const [clickCount, setClickCount] = useState(0);
-  const [uris, setUris] = useState<string>();
-
+  const [isplay, setIsPlay] = useState<boolean>(true);
+  const [showPause, setShowPause] = useState(false);
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+  
   useEffect(() => {
     // Đặt một khoảng thời gian (vd: 3 giây) trước khi biến mất phần tử Lottie
     const timeout = setTimeout(() => {
@@ -60,7 +62,10 @@ const Item = React.memo((props: types) => {
     };
   }, [isLottieVisible]);
 
-  const puseVideo = () => {
+  const puseVideo = event => {
+    const {locationX, locationY} = event.nativeEvent;
+    setX(locationX - 100);
+    setY(locationY - 100);
     setClickCount(prevCount => prevCount + 1);
     if (clickCount === 0) {
       setTimeout(() => {
@@ -68,20 +73,32 @@ const Item = React.memo((props: types) => {
       }, 200); // Đặt thời gian giới hạn giữa hai lần nhấp chuột là 300ms
     } else if (clickCount >= 1) {
       // Người dùng đã nhấp chuột hai lần liên tiếp
-      console.log('Người dùng đã nhấp chuột hai lần liên tiếp');
+      //console.log('Người dùng đã nhấp chuột hai lần liên tiếp');
       // Thực hiện các hành động khác tại đây
       props.handlClick(true, props.index);
+
       return setIsLottieVisible(true);
     }
     if (props.pause == true) {
       props.handlClick(false, props.index);
+      setShowPause(true);
+      // Thiết lập thời gian ẩn sau 3 giây
+      setTimeout(() => {
+        setShowPause(false);
+      }, 1000);
     }
     if (props.pause == false) {
       props.handlClick(true, props.index);
+      setShowPause(true);
+      // Thiết lập thời gian ẩn sau 3 giây
+      setTimeout(() => {
+        setShowPause(false);
+      }, 1000);
     }
   };
 
   const handleOnLoad = data => {
+    //  console.log('=======>', data.duration);
     setVideoDuration(data.duration);
   };
 
@@ -89,20 +106,27 @@ const Item = React.memo((props: types) => {
     setCurrentTime(data.currentTime);
   };
 
-  const onBuffer = () => {
-    console.log('---1');
-    // Xử lý khi video đang buffer
+  const onBuffer = ({isBuffering}) => {
+    console.log(isBuffering, 'Video is buffering...'); // Thêm thông báo log bên trong hàm
+    if (isBuffering) {
+      // Video đang bị lắc, có thể hiển thị màn hình đệm
+      console.log('Video is buffering...');
+    } else {
+      // Video đã đủ dữ liệu để phát tiếp, có thể tiếp tục phát
+      console.log('Buffering complete. Continue playback.');
+    }
   };
 
-  const videoError = () => {
+  const videoError = error => {
     // Xử lý khi xảy ra lỗi video
-    console.log('---2');
+
+    console.log('Video playback error:', error);
   };
   const videoEnd = () => {
     console.log('endooo');
   };
   const handlePlaybackRateChange = rate => {
-    console.log(rate);
+    console.log('======>', rate);
     if (rate === 1) {
       // Xác định video hiện tại đang được xem
       setCurrentVideoIndex(Math.floor(currentTime / videoDuration));
@@ -115,7 +139,7 @@ const Item = React.memo((props: types) => {
         style={styles.backgroundVideo}
         activeOpacity={1}
         underlayColor="transparent"
-        onPress={() => puseVideo()}>
+        onPress={puseVideo}>
         <View style={styles.backgroundVideos}>
           <Video
             source={{
@@ -128,14 +152,15 @@ const Item = React.memo((props: types) => {
             resizeMode="contain"
             // paused={!isVideoPlaying} // dùng vidoe
             paused={!props.pause}
-            //paused={true}
+            // paused={isplay}
             repeat={true}
             onend={videoEnd}
             onProgress={handleOnProgress}
             onLoad={handleOnLoad}
             onPlaybackRateChange={handlePlaybackRateChange} // Xử lý sự kiện khi tốc độ phát video thay đổi
             playWhenInactive={false} // tạm dừng video vẫn hiển thị
-            preLoad="none" // Không tải dữ liệu cho video
+            // preLoad="none" // Không tải dữ liệu cho video
+            preLoad="auto" // Tải một phần dữ liệu video trước khi phát
             bufferConfig={{
               minBufferMs: 5000,
               maxBufferMs: 15000,
@@ -143,7 +168,7 @@ const Item = React.memo((props: types) => {
               bufferForPlaybackAfterRebufferMs: 1000,
             }}
           />
-          <View style={styles.favourite}>
+          <View style={{position: 'absolute', top: y, left: x}}>
             {isLottieVisible && (
               <Lottie
                 style={styles.dropIcon}
@@ -161,6 +186,8 @@ const Item = React.memo((props: types) => {
         comment_number={props.comment_number}
         videoId={props.id ? props.id : 0}
         your_like={props.your_like ? props.your_like : 1}
+        myId={props.myId ? props.myId : -1}
+        avatar={props.image}
       />
       <ButtomVideo
         msg={props.videoDescrible ? props.videoDescrible : ''}
@@ -168,6 +195,16 @@ const Item = React.memo((props: types) => {
         userName={props.userName ? props.userName : ''}
         date={props.createdAt ? props.createdAt : ''}
       />
+      {showPause && (
+        <Image
+          source={
+            !props.pause
+              ? require('../../../../../assets/iconpng/play.png')
+              : require('../../../../../assets/iconpng/pause.png')
+          }
+          style={styles.pause}
+        />
+      )}
     </View>
   );
 });
@@ -256,5 +293,15 @@ const styles = StyleSheet.create({
   dropIcon: {
     width: 200,
     height: 200,
+  },
+  pause: {
+    tintColor: 'rgba(49, 49, 49, .5)',
+    width: 50,
+    height: 50,
+    position: 'absolute',
+    top: '50%', // Căn giữa theo chiều dọc
+    left: '50%', // Căn giữa theo chiều ngang
+    marginLeft: -25, // Điều chỉnh vị trí ngang để căn giữa chính xác
+    marginTop: -25, // Điều chỉnh vị trí dọc để căn giữa chính xác
   },
 });

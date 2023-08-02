@@ -16,7 +16,7 @@ const dataTest = [123, 333, 666];
 
 const Profilemain = () => {
   const navigater = useNavigation();
-  const [isShow, setIshow] = useState<boolean>(true);
+  const [isShow, setIshow] = useState<boolean>(false);
   const [data, setData] = useState<User>({
     id: -1,
     userid: 'Tik tok',

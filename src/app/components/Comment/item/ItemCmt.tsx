@@ -1,15 +1,18 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {format} from 'date-fns';
 import {ColorLight} from '../../../../../assets/colors/colorLight';
 import {User} from '../../../../interface/InterfaceUser';
 import {LocalStorage} from '../../../localStorage/LocalStorage';
 import SuccessFail from '../../alert/alert/SuccessFail';
+import {http} from '../../../../servers/api/api';
 type types = {
   name?: string;
   date?: string;
   msg?: string;
   userId: number;
   commentId: number;
+  avatar?: string;
   handleDelete: (commentId: number, myId: number) => Promise<boolean>;
 };
 const ItemCmt = (p: types) => {
@@ -23,7 +26,7 @@ const ItemCmt = (p: types) => {
   useEffect(() => {
     const getUser = async () => {
       const user: User = await LocalStorage.getData('user');
-      if (!user.id) return;
+      if (!user || !user.id) return;
       setMyId(user.id);
     };
     getUser();
@@ -48,9 +51,17 @@ const ItemCmt = (p: types) => {
   return (
     <View style={styles.container}>
       <View style={styles.avt}>
-        <Image
-          style={{width: '100%', height: '100%', borderRadius: 50}}
-          source={require('../../../../../assets/images/a.jpg')}></Image>
+        {p.avatar && p.avatar != '' ? (
+          <Image
+            style={{width: '100%', height: '100%', borderRadius: 50}}
+            source={{
+              uri: `${http}/images_200/${p.userId}/${p.avatar}`,
+            }}></Image>
+        ) : (
+          <Image
+            style={{width: '100%', height: '100%', borderRadius: 50}}
+            source={{uri: `${http}/default/tiktok32.png`}}></Image>
+        )}
       </View>
       <View style={styles.msg}>
         <View
@@ -70,7 +81,9 @@ const ItemCmt = (p: types) => {
           ) : null}
         </View>
         <Text style={[styles.text]}>{p.msg}</Text>
-        <Text style={[styles.text]}>{p.date}</Text>
+        <Text style={[styles.text]}>
+          {format(new Date(p.date), 'yyyy-MM-dd HH:mm:ss')}
+        </Text>
       </View>
       <SuccessFail
         onclick={handleClikError}

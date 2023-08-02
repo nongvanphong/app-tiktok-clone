@@ -4,7 +4,7 @@ export interface User {
   email?: string;
   password?: string;
   username?: string;
-  userimage?: any;
+  userimage?: string;
   status?: number;
   createdAt?: string;
   updatedAt?: string;

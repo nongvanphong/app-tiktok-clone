@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Controller, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -16,6 +16,7 @@ import {FetchUser} from '../../../servers/User/FetchUser';
 import {LocalStorage} from '../../localStorage/LocalStorage';
 import SuccessFail from '../../components/alert/alert/SuccessFail';
 import {ColorLight} from '../../../../assets/colors/colorLight';
+import {MyAlertContext} from '../../../../App';
 
 const schema = yup
   .object({
@@ -31,6 +32,7 @@ const schema = yup
   })
   .required();
 const Logins = ({route}) => {
+  const {socket} = useContext(MyAlertContext);
   const [isShowAlert, SetisShowAlert] = useState<boolean>(false);
   // Lấy giá trị email từ params
   const {email} = route.params;
@@ -55,7 +57,8 @@ const Logins = ({route}) => {
     }
 
     await LocalStorage.setData('user', result.data);
-
+    console.log('---', socket);
+    socket.emit('userLogin', {userId: result.data.id});
     return navigater.navigate('Home');
   };
   const hanldleClick = () => {

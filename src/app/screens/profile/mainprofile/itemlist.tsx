@@ -21,9 +21,12 @@ const Itemlist = (props: typerItemList) => {
       case 0:
         break;
       case 1:
-        navigater.navigate('Setting');
+        navigater.navigate('list Video');
         break;
       case 2:
+        navigater.navigate('Setting');
+        break;
+      case 3:
         LocalStorage.removeData('user');
         navigater.navigate('home');
         showToast('Thông báo', 'success', 'Đăng xuất thành công');

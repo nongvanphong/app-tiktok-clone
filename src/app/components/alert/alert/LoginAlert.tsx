@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Modal, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import Lottie from 'lottie-react-native';
 import {ColorLight} from '../../../../../assets/colors/colorLight';
 import {useNavigation} from '@react-navigation/native';
@@ -35,12 +42,89 @@ const LoginAlert = (props: Type) => {
           <TouchableOpacity
             style={[styles.bnt, styles.bntRegister]}
             onPress={bntRegister}>
-            <Text style={styles.text}>Đăng kí</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+                source={require('../../../../../assets/iconpng/user1.png')}
+              />
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1,
+                }}>
+                <Text style={styles.text}>Đăng kí</Text>
+              </View>
+            </View>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.bnt, styles.bntRegister]}
+            // onPress={bntRegister}
+          >
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+                source={require('../../../../../assets/iconpng/google.png')}
+              />
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1,
+                }}>
+                <Text style={styles.text}>Tiếp tục với Google</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.bnt, styles.bntRegister]}
+            // onPress={bntRegister}
+          >
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+                source={require('../../../../../assets/iconpng/facebook.png')}
+              />
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1,
+                }}>
+                <Text style={styles.text}>Tiếp tục với Facebook</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.bnt, styles.bntSkip]}
             onPress={bntSkip}>
-            <Text style={styles.text}>Không sử dụng tài khoản</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                }}
+                source={require('../../../../../assets/iconpng/prohibited.png')}
+              />
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1,
+                }}>
+                <Text style={styles.text}>Không sử dụng tài khoản</Text>
+              </View>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -65,26 +149,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bnt: {
-    paddingVertical: 5,
+    padding: 5,
     alignSelf: 'center',
-    borderRadius: 10,
+    borderRadius: 5,
     width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 10,
+    //justifyContent: 'center',
+    // alignItems: 'center',
+    marginVertical: 2,
   },
 
   bntSkip: {
-    backgroundColor: ColorLight.bntblack,
+    //backgroundColor: ColorLight.bntblack,
+    borderColor: 'black',
+    borderWidth: 1,
   },
   bntRegister: {
-    backgroundColor: ColorLight.bntOk,
+    // backgroundColor: ColorLight.bntOk,
+    borderColor: 'black',
+    borderWidth: 1,
   },
   text: {
     fontSize: 16,
     fontWeight: '500',
     marginVertical: 10,
-    color: ColorLight.textWhite,
+    color: ColorLight.textBlack,
+    //  marginRight: 30,
   },
 });
 

@@ -21,16 +21,19 @@ import {Comments} from '../../../interface/interfaceComment';
 import LoadMore from '../load/loadMore/LoadMore';
 import {LocalStorage} from '../../localStorage/LocalStorage';
 import {User} from '../../../interface/InterfaceUser';
+import {MyAlertContext} from '../../../../App';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Comment = () => {
-  const {VideoID, setIsCmtShown} = useContext(HomeContext);
+  const {VideoID, setIsCmtShown, myId} = useContext(HomeContext);
+
+  const {showToast1, socket} = useContext(MyAlertContext);
   const [data, setData] = useState<Comments[]>([]);
   const [comment, setComment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
-
+  const [isUser, setIsUser] = useState(false);
   useEffect(() => {
     const getComment = async () => {
       try {
@@ -39,6 +42,12 @@ const Comment = () => {
         setData(result.data);
         setTotal(result.total);
         setIsLoading(true);
+        const user: User = await LocalStorage.getData('user');
+
+        if (!user) {
+          return setIsUser(false);
+        }
+        setIsUser(true);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -74,6 +83,11 @@ const Comment = () => {
         userimage: user.userimage,
       },
     };
+    socket.emit('notify', {
+      userId: myId,
+      mesenger: result.data.messenger,
+      username: user.username,
+    });
     setData(prevList => [dataUpdate, ...prevList]);
     setComment('');
   };
@@ -88,6 +102,7 @@ const Comment = () => {
       console.log('comment thất bại===============================');
       return false;
     }
+
     setData(prevList => prevList.filter(item => item.id !== commentId));
     return true;
   };
@@ -112,6 +127,7 @@ const Comment = () => {
                   date={item.createdAt}
                   userId={item.User.id ? item.User.id : 0}
                   commentId={item.id ? item.id : -1}
+                  avatar={item.User.userimage}
                   handleDelete={handlDelete}
                 />
               )}
@@ -121,22 +137,24 @@ const Comment = () => {
               // onEndReached={loadMoreItems}
               // onEndReachedThreshold={2}
             />
-            <View style={styles.containerInput}>
-              <TextInput
-                style={styles.input}
-                placeholder="Add a comment..."
-                placeholderTextColor={'gray'}
-                value={comment}
-                onChangeText={handleCommentChange}
-              />
-              <TouchableOpacity
-                style={styles.sendButton}
-                onPress={handleSendComment}>
-                <Image
-                  style={styles.iconSend}
-                  source={require('../../../../assets/iconpng/send.png')}></Image>
-              </TouchableOpacity>
-            </View>
+            {isUser && (
+              <View style={styles.containerInput}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Add a comment..."
+                  placeholderTextColor={'gray'}
+                  value={comment}
+                  onChangeText={handleCommentChange}
+                />
+                <TouchableOpacity
+                  style={styles.sendButton}
+                  onPress={handleSendComment}>
+                  <Image
+                    style={styles.iconSend}
+                    source={require('../../../../assets/iconpng/send.png')}></Image>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         ) : (
           <View

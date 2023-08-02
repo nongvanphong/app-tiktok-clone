@@ -12,6 +12,7 @@ const windowWidth = Dimensions.get('window').width;
 const Home = () => {
   const [isCmtShown, setIsCmtShown] = useState(false);
   const [VideoID, setVideoID] = useState(0);
+  const [myId, setMyId] = useState(0);
   return (
     <HomeContext.Provider
       value={{
@@ -19,6 +20,8 @@ const Home = () => {
         setIsCmtShown,
         VideoID: VideoID,
         setVideoID,
+        myId: myId,
+        setMyId,
       }}>
       <View style={{width: windowWidth, height: windowHeight}}>
         {/* <Headerbar /> */}

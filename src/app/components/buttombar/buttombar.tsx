@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   GestureResponderEvent,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Toast from 'react-native-toast-message';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -15,6 +15,9 @@ import Profile from '../../screens/profile/profile';
 import ListItem from '../../screens/home/listview/listitem';
 import Home from '../../screens/home/home';
 import Add from '../../screens/add/Add';
+import PushNotification from 'react-native-push-notification';
+import Notify from '../../screens/notify/Notify';
+import Search from '../../screens/search/Search';
 
 const Tab = createBottomTabNavigator();
 const A = () => {
@@ -36,6 +39,26 @@ const A = () => {
       visibilityTime: 1000,
     });
   };
+  // useEffect(() => {
+  //   // Khởi tạo bộ xử lý thông báo
+  //   PushNotification.configure({
+  //     // Được gọi khi người dùng nhấn vào thông báo khi ứng dụng đang mở
+  //     onNotification: function (notification) {
+  //       console.log('Thông báo đã được mở hoặc nhận:', notification);
+  //     },
+  //   });
+  // }, []);
+
+  const handleSendNotification = () => {
+    // Lập lịch thông báo cục bộ
+    console.log('vào');
+    PushNotification.localNotification({
+      channelId: 'channel-id', // Đối với Android Oreo trở lên, cần phải chỉ định channelId
+      title: 'Thông báo cục bộ',
+      message: 'Đây là thông báo cục bộ từ ứng dụng của bạn!',
+    });
+    console.log('---------');
+  };
   return (
     <View style={{flex: 1, backgroundColor: 'green'}}>
       <View style={{zIndex: 100}}>
@@ -45,6 +68,9 @@ const A = () => {
 
       <Button title="Show toast" onPress={showToast} />
       <Button title="Show toast1" onPress={showToast1} />
+      <View>
+        <Button title="Gửi thông báo" onPress={handleSendNotification} />
+      </View>
     </View>
   );
 };
@@ -85,11 +111,36 @@ const Buttombar = React.memo(() => {
                 resizeMode="contain"
                 tintColor={focused ? '#ffff' : '#748c94'}
               />
-              <Text style={{color: focused ? '#ffff' : '#748c94'}}>home</Text>
+              <Text
+                style={{color: focused ? '#ffff' : '#748c94', fontSize: 10}}>
+                home
+              </Text>
             </View>
           ),
         }}
       />
+
+      <Tab.Screen
+        name="Tìm kiếm"
+        component={Search}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                source={require('../../../../assets/iconpng/search.png')}
+                style={{width: 20, height: 20}}
+                resizeMode="contain"
+                tintColor={focused ? '#ffff' : '#748c94'}
+              />
+              <Text
+                style={{color: focused ? '#ffff' : '#748c94', fontSize: 10}}>
+                Tìm kiếm
+              </Text>
+            </View>
+          ),
+        }}
+      />
+
       <Tab.Screen
         name="Settings"
         component={Add}
@@ -117,7 +168,29 @@ const Buttombar = React.memo(() => {
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="Thông báo"
+        component={Notify}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          tabBarIcon: ({focused}) => (
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                source={require('../../../../assets/iconpng/notification.png')}
+                style={{width: 20, height: 20}}
+                resizeMode="contain"
+                tintColor={focused ? '#ffff' : '#748c94'}
+              />
+              <Text
+                style={{color: focused ? '#ffff' : '#748c94', fontSize: 10}}>
+                Thông báo
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Cài đặt"
         component={Profile}
         options={{
           tabBarIcon: ({focused}) => (
@@ -128,8 +201,9 @@ const Buttombar = React.memo(() => {
                 resizeMode="contain"
                 tintColor={focused ? '#ffff' : '#748c94'}
               />
-              <Text style={{color: focused ? '#ffff' : '#748c94'}}>
-                profile
+              <Text
+                style={{color: focused ? '#ffff' : '#748c94', fontSize: 10}}>
+                Cá nhân
               </Text>
             </View>
           ),

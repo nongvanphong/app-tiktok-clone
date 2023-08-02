@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import React, {useState} from 'react';
-
+import {format} from 'date-fns';
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 type Type = {
@@ -36,7 +36,9 @@ const ButtomVideo = React.memo((props: Type) => {
         onPress={show}>
         <Text style={styles.colorText}>{props.msg}</Text>
       </TouchableHighlight>
-      <Text style={styles.colorText}>{props.date}</Text>
+      <Text style={styles.colorText}>
+        {format(new Date(props.date), 'yyyy-MM-dd HH:mm:ss')}
+      </Text>
     </View>
   );
 });

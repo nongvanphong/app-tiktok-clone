@@ -7,14 +7,17 @@ import {FetchFavourite} from '../../../../servers/Favourite/FetchFavourite';
 import {LocalStorage} from '../../../localStorage/LocalStorage';
 import {User} from '../../../../interface/InterfaceUser';
 import LoginAlert from '../../../components/alert/alert/LoginAlert';
+import {http} from '../../../../servers/api/api';
 type Typer = {
   like_number?: number;
   comment_number?: number;
   videoId: number;
   your_like: number;
+  myId: number;
+  avatar?: string;
 };
 const TouchItem = React.memo((prosp: Typer) => {
-  const {setVideoID, setIsCmtShown} = useContext(HomeContext);
+  const {setVideoID, setIsCmtShown, setMyId} = useContext(HomeContext);
   const navigater = useNavigation();
   const [showDilog, setshowDilog] = useState<InterfaceAlert[]>({
     write: false,
@@ -66,15 +69,28 @@ const TouchItem = React.memo((prosp: Typer) => {
   };
   const comment = () => {
     setVideoID(prosp.videoId);
+    setMyId(prosp.myId);
     setIsCmtShown(true);
   };
   return (
     <View style={styles.container}>
       <View style={styles.item}>
         <View style={[styles.flex, styles.border]}>
-          <Image
-            style={styles.avt}
-            source={require('../../../../../assets/images/a.jpg')}></Image>
+          {prosp.avatar || prosp.avatar != '' ? (
+            <Image
+              style={styles.avt}
+              source={{
+                uri: `${http}/images_200/${prosp.myId}/${prosp.avatar}`,
+              }}
+            />
+          ) : (
+            <Image
+              style={styles.avt}
+              source={{
+                uri: `${http}/default/tiktok32.png`,
+              }}
+            />
+          )}
           <TouchableOpacity style={styles.add}>
             <Image
               style={styles.iconAdd}

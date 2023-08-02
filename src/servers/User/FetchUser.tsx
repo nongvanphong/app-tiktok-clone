@@ -58,6 +58,18 @@ const UpdateAvatar = async (image: File, id: number) => {
     return error.response.data;
   }
 };
+const Search = async (_page: number, textSearch?: string) => {
+  try {
+    console.log(textSearch);
+    const response = await api.get('/auth/search', {
+      params: {_page, textSearch},
+    });
+    return response.data;
+  } catch (error) {
+    console.log('Error fetching users:', error);
+    return error.response.data;
+  }
+};
 export const FetchUser = {
   checkEMail,
   Login,
@@ -65,4 +77,5 @@ export const FetchUser = {
   UpdateUserName,
   UpdatePassword,
   UpdateAvatar,
+  Search,
 };

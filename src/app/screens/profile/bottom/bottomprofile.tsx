@@ -9,6 +9,11 @@ const dataItem = [
   },
   {
     img1: require('../../../../../assets/iconpng/gear.png'),
+    txt: 'Xem danh sách video',
+    img2: require('../../../../../assets/iconpng/right-arrow.png'),
+  },
+  {
+    img1: require('../../../../../assets/iconpng/gear.png'),
     txt: 'Cài đặt',
     img2: require('../../../../../assets/iconpng/right-arrow.png'),
   },

@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   imgIcon: {
     width: 30,
     height: 30,
-    tintColor: '#6d6d6d',
+    tintColor: '#000',
   },
   containerImage: {
     justifyContent: 'center',
