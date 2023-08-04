@@ -6,12 +6,15 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
+import {boolean} from 'yup';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 type typesButtonSend = {
   bntClick: () => void;
+  isshow: boolean;
+  txt: number;
 };
 const ButtonSend = (props: typesButtonSend) => {
   const handleClick = () => {
@@ -19,8 +22,13 @@ const ButtonSend = (props: typesButtonSend) => {
   };
   return (
     <View style={styles.conatainer}>
-      <TouchableOpacity style={styles.bnt} onPress={handleClick}>
-        <Text style={styles.text}>Save</Text>
+      <TouchableOpacity
+        disabled={props.isshow}
+        style={styles.bnt}
+        onPress={handleClick}>
+        <Text style={styles.text}>
+          {props.isshow ? `${props.txt}%` : 'Lưu'}
+        </Text>
       </TouchableOpacity>
     </View>
   );

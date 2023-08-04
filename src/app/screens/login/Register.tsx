@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useContext, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
@@ -20,6 +21,13 @@ import {MyAlertContext} from '../../../../App';
 
 const schema = yup
   .object({
+    email: yup
+      .string()
+      .max(50, 'Email bé hơn 50 kí tự')
+      .matches(
+        /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+        'Email không đúng định dạng',
+      ),
     password: yup
       .string()
       .min(8)
@@ -32,6 +40,7 @@ const schema = yup
   .required();
 const Register = ({route}) => {
   // Lấy giá trị email từ params
+  const [isL, setisL] = useState<boolean>(false);
   const {socket} = useContext(MyAlertContext);
   const {email} = route.params;
   const navigator = useNavigation();
@@ -47,6 +56,7 @@ const Register = ({route}) => {
   });
   const [isShowAlert, SetisShowAlert] = useState<boolean>(false);
   const onSubmit = async data => {
+    setisL(true);
     const newData = {
       ...data,
       email: email,
@@ -54,13 +64,14 @@ const Register = ({route}) => {
     const result = await FetchUser.Register(newData);
     if (result.status !== 201) {
       console.log('==>', result);
+      setisL(false);
       SetisShowAlert(true);
       return;
     }
     await LocalStorage.setData('user', result.data);
 
     socket.emit('userLogin', {userId: result.data.id});
-
+    setisL(false);
     navigator.navigate('Home');
   };
   const hanldleClick = () => {
@@ -126,8 +137,21 @@ const Register = ({route}) => {
             ? {backgroundColor: ColorLight.bntfail}
             : {backgroundColor: ColorLight.bntOk},
         ]}
+        disabled={isL}
         onPress={handleSubmit(onSubmit)}>
-        <Text style={[styles.textbnt]}>Tiếp</Text>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          {isL ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={{color: ColorLight.textWhite, fontWeight: 'bold'}}>
+              Tiếp
+            </Text>
+          )}
+        </View>
       </TouchableOpacity>
       <SuccessFail
         onclick={hanldleClick}

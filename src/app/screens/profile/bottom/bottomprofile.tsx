@@ -8,7 +8,7 @@ const dataItem = [
     img2: require('../../../../../assets/iconpng/right-arrow.png'),
   },
   {
-    img1: require('../../../../../assets/iconpng/gear.png'),
+    img1: require('../../../../../assets/iconpng/check.png'),
     txt: 'Xem danh sách video',
     img2: require('../../../../../assets/iconpng/right-arrow.png'),
   },

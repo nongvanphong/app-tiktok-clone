@@ -6,6 +6,7 @@ import {
   Animated,
   Dimensions,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import React, {
   MutableRefObject,
@@ -36,6 +37,8 @@ interface videos {
 }
 
 const ListItem = React.memo(() => {
+  const {ishowcmt, setIsCmtShown} = useContext(HomeContext);
+  const [refreshing, setRefreshing] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState<number>(0); // hàm lưu vị trí video đnag phát
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingScreen, setIsLoadingScreen] = useState<boolean>(false);
@@ -68,9 +71,16 @@ const ListItem = React.memo(() => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const user: User = await LocalStorage.getData('user');
-      console.log('--số trang load->', currentVideoIndex);
+      // const nextPage = currentPage + 1;
+
+      // if (total / 10 + 1 < nextPage) {
+      //   setIsLoadMore(false);
+      //   return console.log('không laod nữa', nextPage, total / 10 + 1);
+      // }
+
       const nextPage = currentPage + 1;
+
+      const user: User = await LocalStorage.getData('user');
       const result = await FetchVideo.GetAll(nextPage, user ? user.id : -1);
       setVideoList(prevList => [...prevList, ...result.data]);
 
@@ -101,8 +111,18 @@ const ListItem = React.memo(() => {
 
     getVideo();
   }, []);
-  const {ishowcmt, setIsCmtShown} = useContext(HomeContext);
 
+  const onRefresh = async () => {
+    console.log('000000');
+    setRefreshing(true);
+    //setIsLoadMore(true);
+    const user: User = await LocalStorage.getData('user');
+    const result = await FetchVideo.GetAll(1, user ? user.id : -1);
+    setCurrentPage(1);
+
+    setVideoList(result.data);
+    setRefreshing(false);
+  };
   return (
     <View style={{backgroundColor: '#000'}}>
       {isLoadingScreen ? (
@@ -145,6 +165,9 @@ const ListItem = React.memo(() => {
           ListFooterComponent={LoadMore}
           onEndReached={loadMoreItems}
           onEndReachedThreshold={2}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       ) : (
         <View

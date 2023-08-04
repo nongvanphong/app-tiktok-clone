@@ -21,8 +21,26 @@ type TextWrite = {
   msg?: string;
 };
 const SuccessFail = (props: Type) => {
-  const [textInput, setTextInput] = useState<TextWrite[]>([]);
+  const [textInput, setTextInput] = useState<TextWrite>({
+    tag: '',
+    name: '',
+    tag: '',
+  });
+  const [err, setErr] = useState({});
   const handlClick = () => {
+    if (textInput.tag?.length > 20) {
+      setErr(p => ({...p, tag: true, name: false, msg: false}));
+      return;
+    }
+    if (textInput.name?.length > 20) {
+      setErr(p => ({...p, tag: false, name: true, msg: false}));
+      return;
+    }
+    if (textInput.msg?.length > 250) {
+      setErr(p => ({...p, tag: false, name: false, msg: true}));
+      return;
+    }
+    setErr(p => ({...p, tag: false, name: false, msg: false}));
     props.onclick(textInput);
   };
   const handlClickClose = () => {
@@ -33,9 +51,7 @@ const SuccessFail = (props: Type) => {
       <View style={styles.overlay}>
         <View style={styles.alertContainer}>
           <View style={styles.header}>
-            <Text style={{fontSize: 20, fontWeight: '500'}}>
-              header{props.title}
-            </Text>
+            <Text style={{fontSize: 20, fontWeight: '500'}}>{props.title}</Text>
           </View>
           <View style={{width: '100%'}}>
             <TextInput
@@ -46,7 +62,11 @@ const SuccessFail = (props: Type) => {
               value={textInput.tag}
               placeholder="Nhập Tag"
             />
-            <View style={styles.line}></View>
+            <View
+              style={[
+                styles.line,
+                {backgroundColor: err.tag ? 'red' : 'gray'},
+              ]}></View>
             <TextInput
               style={styles.text}
               onChangeText={valun =>
@@ -55,7 +75,11 @@ const SuccessFail = (props: Type) => {
               value={textInput.name}
               placeholder="Nhập nội dung video"
             />
-            <View style={styles.line}></View>
+            <View
+              style={[
+                styles.line,
+                {backgroundColor: err.name ? 'red' : 'gray'},
+              ]}></View>
             <TextInput
               style={styles.text}
               onChangeText={valun =>
@@ -65,7 +89,11 @@ const SuccessFail = (props: Type) => {
               placeholder="Nhập nội dung video"
             />
           </View>
-          <View style={styles.line}></View>
+          <View
+            style={[
+              styles.line,
+              {backgroundColor: err.msg ? 'red' : 'gray'},
+            ]}></View>
           <View style={styles.containerBnt}>
             <TouchableOpacity style={styles.bnt} onPress={handlClickClose}>
               <Text

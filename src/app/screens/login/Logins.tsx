@@ -4,6 +4,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useContext, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,6 +33,7 @@ const schema = yup
   })
   .required();
 const Logins = ({route}) => {
+  const [isL, setisL] = useState<boolean>(false);
   const {socket} = useContext(MyAlertContext);
   const [isShowAlert, SetisShowAlert] = useState<boolean>(false);
   // Lấy giá trị email từ params
@@ -49,15 +51,17 @@ const Logins = ({route}) => {
     resolver: yupResolver(schema),
   });
   const onSubmit = async data => {
+    setisL(true);
     const result = await FetchUser.Login(data);
     if (result.status !== 200) {
       SetisShowAlert(true);
+      setisL(false);
       console.log('màn hình đăng nhập => đăng nhập thất bại');
       return;
     }
 
     await LocalStorage.setData('user', result.data);
-    console.log('---', socket);
+    setisL(false);
     socket.emit('userLogin', {userId: result.data.id});
     return navigater.navigate('Home');
   };
@@ -123,6 +127,7 @@ const Logins = ({route}) => {
 
       <Text style={styles.textFogetPassword}>Quên mật khẩu</Text>
       <TouchableOpacity
+        disabled={isL}
         style={[
           styles.bntLogin,
           errors.email || errors.password
@@ -130,7 +135,19 @@ const Logins = ({route}) => {
             : {backgroundColor: ColorLight.bntOk},
         ]}
         onPress={handleSubmit(onSubmit)}>
-        <Text style={[styles.textbnt]}>Tiếp</Text>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          {isL ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={{color: ColorLight.textWhite, fontWeight: 'bold'}}>
+              Tiếp
+            </Text>
+          )}
+        </View>
       </TouchableOpacity>
       <SuccessFail
         onclick={hanldleClick}

@@ -49,7 +49,7 @@ const Item = React.memo((props: types) => {
   const [showPause, setShowPause] = useState(false);
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
-  
+  const [isBuffering, setIsBuffering] = useState(false);
   useEffect(() => {
     // Đặt một khoảng thời gian (vd: 3 giây) trước khi biến mất phần tử Lottie
     const timeout = setTimeout(() => {
@@ -106,14 +106,13 @@ const Item = React.memo((props: types) => {
     setCurrentTime(data.currentTime);
   };
 
-  const onBuffer = ({isBuffering}) => {
-    console.log(isBuffering, 'Video is buffering...'); // Thêm thông báo log bên trong hàm
+  const onBuffer = isBuffering => {
     if (isBuffering) {
-      // Video đang bị lắc, có thể hiển thị màn hình đệm
       console.log('Video is buffering...');
+      // Có thể hiển thị một giao diện thông báo buffering tại đây
     } else {
-      // Video đã đủ dữ liệu để phát tiếp, có thể tiếp tục phát
-      console.log('Buffering complete. Continue playback.');
+      console.log('Buffering finished.');
+      // Có thể ẩn giao diện thông báo buffering tại đây
     }
   };
 
@@ -126,8 +125,12 @@ const Item = React.memo((props: types) => {
     console.log('endooo');
   };
   const handlePlaybackRateChange = rate => {
-    console.log('======>', rate);
+    if (rate === 0) {
+      console.log('Video is buffering...');
+      // Có thể hiển thị một giao diện thông báo buffering tại đây
+    }
     if (rate === 1) {
+      console.log('hết lac');
       // Xác định video hiện tại đang được xem
       setCurrentVideoIndex(Math.floor(currentTime / videoDuration));
     }
@@ -168,6 +171,7 @@ const Item = React.memo((props: types) => {
               bufferForPlaybackAfterRebufferMs: 1000,
             }}
           />
+
           <View style={{position: 'absolute', top: y, left: x}}>
             {isLottieVisible && (
               <Lottie
@@ -180,6 +184,7 @@ const Item = React.memo((props: types) => {
           </View>
         </View>
       </TouchableHighlight>
+
       <ProgressBar timeStart={currentTime} timeEnd={videoDuration} />
       <TouchItem
         like_number={props.like_number}

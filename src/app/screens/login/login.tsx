@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   ScrollView,
@@ -36,6 +37,7 @@ type ErrorArray = {
 };
 const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 const Login = () => {
+  const [isL, setisL] = useState<boolean>(false);
   const [text, onChangeText] = useState<string>('');
   const [err, setErr] = useState<ErrorArray[]>({
     msg: '',
@@ -68,6 +70,7 @@ const Login = () => {
         msg: 'Email không đúng định dạng',
       }));
     }
+    setisL(true);
     setErr(prevState => ({
       ...prevState,
       showErr: false,
@@ -75,8 +78,10 @@ const Login = () => {
     }));
     const result = await FetchUser.checkEMail(text);
     if (result.status == 201) {
+      setisL(false);
       return navigater.navigate('Login1', {email: text});
     }
+    setisL(false);
     return navigater.navigate('Register', {email: text});
   };
   return (
@@ -101,11 +106,25 @@ const Login = () => {
         </View>
         {err.showErr && <Text style={{color: 'red'}}>{err.msg}</Text>}
         <TouchableOpacity
+          disabled={isL}
           style={styles.bntLogin}
           onPress={() => {
             bntNext();
           }}>
-          <Text style={[styles.textbnt, styles.txtSize]}>Tiếp</Text>
+          {/* <Text style={[styles.textbnt, styles.txtSize]}>Tiếp</Text> */}
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            {isL ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={{color: ColorLight.textWhite, fontWeight: 'bold'}}>
+                Tiếp
+              </Text>
+            )}
+          </View>
         </TouchableOpacity>
 
         <ScrollView

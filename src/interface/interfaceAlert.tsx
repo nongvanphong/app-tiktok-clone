@@ -4,4 +4,6 @@ interface InterfaceAlert {
   fail?: boolean;
   login?: boolean;
   messenger?: string;
+  title?: string;
+  question?: boolean;
 }

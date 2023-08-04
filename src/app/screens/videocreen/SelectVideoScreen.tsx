@@ -1,4 +1,4 @@
-import {StyleSheet, View, Dimensions} from 'react-native';
+import {StyleSheet, View, Dimensions, Text} from 'react-native';
 import React, {useState} from 'react';
 import * as ImagePicker from 'react-native-image-picker';
 import SelectVideo from '../../components/video/selectvideo/SelectVideo';
@@ -22,6 +22,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const SelectVideoScreen = ({navigation: {goBack}}) => {
   const navigater = useNavigation();
+  const [isL, setisL] = useState<boolean>(false);
   const [uriVideo, setUriVideo] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<File>();
   const [showDilog, setshowDilog] = useState<InterfaceAlert[]>({
@@ -32,6 +33,7 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
   });
   const [isShow, setIsShow] = useState<boolean>(true);
   const [dataText, setDataText] = useState<object | undefined>();
+  const [progress, setProgress] = useState(0);
   const handleShow = () => {
     if (isShow) {
       setIsShow(false);
@@ -47,7 +49,8 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
       title: 'Select video',
       mediaType: 'video',
       path: 'video',
-      quality: 1,
+      videoQuality: 'medium',
+      durationLimit: 30,
     };
     ImagePicker.launchImageLibrary(options, response => {
       if (response.didCancel) {
@@ -65,7 +68,7 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
           type: response.assets[0].type,
           name: response.assets[0].fileName,
         };
-        console.log("=d==>",response.assets[0])
+
         setFile(files);
       }
     });
@@ -73,29 +76,42 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
 
   const bntSave = async () => {
     try {
+      setisL(true);
       if (!file)
         return setshowDilog(prevState => ({
           ...prevState,
           fail: true,
+          title: 'Cảnh báo!',
           messenger: 'Vui lòng chọn video',
         }));
       const data: User = await LocalStorage.getData('user');
       if (!data)
         return setshowDilog(prevState => ({...prevState, login: true}));
       setshowDilog(prevState => ({...prevState, login: false}));
+      let msg = '';
+      let name = '';
+      let tag = '';
 
+      if (dataText) {
+        msg = dataText.msg;
+        name = dataText.name;
+        tag = dataText.tag;
+      }
+      console.log('========>', msg, name, tag);
       const result = await FetchVideo.Create(
         file,
         data.id,
-        dataText.msg,
-        dataText.name,
-        dataText.tag,
+        msg,
+        name,
+        tag,
+        progress => setProgress(progress),
       );
-      console.log('===>', result.status);
       if (result.status === 201) {
+        setisL(false);
         setshowDilog(prevState => ({...prevState, sussecc: true}));
         console.log('sussecc');
       } else {
+        setisL(false);
         return setshowDilog(prevState => ({
           ...prevState,
           fail: true,
@@ -103,6 +119,7 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
         }));
       }
     } catch (error) {
+      setisL(false);
       console.error('Error fetching users:', error);
     }
   };
@@ -125,6 +142,7 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
   };
 
   const oclickAlertSuccess = () => {
+    navigater.navigate('Settings');
     setshowDilog(prevState => ({...prevState, sussecc: false}));
   };
   const bntRegister = () => {
@@ -152,7 +170,10 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
           dataText={dataText}
         />
       )}
-      {isShow && <ButtonSend bntClick={bntSave} />}
+      <View style={{position: 'absolute'}}>
+        {/* <Text style={{color: 'white'}}>{progress}%</Text> */}
+      </View>
+      {isShow && <ButtonSend txt={progress} isshow={isL} bntClick={bntSave} />}
       {isShow && (
         <View
           style={{
@@ -177,7 +198,7 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
       <WriteText
         onclick={bntWriteOk}
         onclose={bntCloseWrite}
-        title="Success"
+        title="Nhập nội dụng video!"
         describle="Video đã được đăng"
         visible={showDilog.write}
       />
@@ -191,7 +212,7 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
         onclick={handleClikError}
         visible={showDilog.fail}
         describle={showDilog.messenger}
-        title="Lỗi"
+        title={showDilog.title}
       />
     </View>
   );

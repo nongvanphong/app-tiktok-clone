@@ -4,8 +4,9 @@ const Favourite = async (id: number, videoid: number) => {
   try {
     const newData = {
       id,
-      videoid,
+      video_id: videoid,
     };
+
     const response = await api.post('videos/favourite', newData);
     return response.data;
   } catch (error) {

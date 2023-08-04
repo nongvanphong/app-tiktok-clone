@@ -28,7 +28,7 @@ const Itemlist = (props: typerItemList) => {
         break;
       case 3:
         LocalStorage.removeData('user');
-        navigater.navigate('home');
+        navigater.navigate('Home');
         showToast('Thông báo', 'success', 'Đăng xuất thành công');
         break;
       default:

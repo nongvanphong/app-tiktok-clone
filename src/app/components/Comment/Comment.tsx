@@ -10,6 +10,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useContext, useEffect} from 'react';
 import {ColorLight} from '../../../../assets/colors/colorLight';
@@ -27,7 +28,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const Comment = () => {
   const {VideoID, setIsCmtShown, myId} = useContext(HomeContext);
-
+  const [isL, setisL] = useState<boolean>(false);
   const {showToast1, socket} = useContext(MyAlertContext);
   const [data, setData] = useState<Comments[]>([]);
   const [comment, setComment] = useState('');
@@ -61,14 +62,20 @@ const Comment = () => {
   };
 
   const handleSendComment = async () => {
+    if (!comment) return;
     if (!VideoID) return;
+
     const user: User = await LocalStorage.getData('user');
     if (!user.id) return;
 
+    setisL(true);
     const result = await FetchComment.Create(user.id, comment, VideoID);
 
-    if (result.status != 200)
-      return console.log('comment thất bại===============================');
+    if (result.status != 200) {
+      console.log('comment thất bại===============================');
+      setisL(false);
+      return;
+    }
     const dataUpdate = {
       id: result.data.id,
       userid: user.id,
@@ -90,6 +97,7 @@ const Comment = () => {
     });
     setData(prevList => [dataUpdate, ...prevList]);
     setComment('');
+    setisL(false);
   };
   const handlClose = () => {
     setIsCmtShown(false);
@@ -147,11 +155,19 @@ const Comment = () => {
                   onChangeText={handleCommentChange}
                 />
                 <TouchableOpacity
+                  disabled={isL}
                   style={styles.sendButton}
                   onPress={handleSendComment}>
-                  <Image
+                  {/* <Image
                     style={styles.iconSend}
-                    source={require('../../../../assets/iconpng/send.png')}></Image>
+                    source={require('../../../../assets/iconpng/send.png')}></Image> */}
+                  {isL ? (
+                    <ActivityIndicator size="small" color="red" />
+                  ) : (
+                    <Image
+                      style={styles.iconSend}
+                      source={require('../../../../assets/iconpng/send.png')}></Image>
+                  )}
                 </TouchableOpacity>
               </View>
             )}

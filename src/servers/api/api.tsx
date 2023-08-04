@@ -1,4 +1,4 @@
-//const hot = '172.16.30.175';
+//const hot = '172.16.24.245';
 const hot = '192.168.10.21';
 //const hot = '192.168.1.104';
 const port = 1234;

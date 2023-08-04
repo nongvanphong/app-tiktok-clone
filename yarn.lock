@@ -6758,10 +6758,10 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-native-create-thumbnail@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/react-native-create-thumbnail/-/react-native-create-thumbnail-1.6.4.tgz#90f5b0a587de6e3738a7632fe3d9a9624ed83581"
-  integrity sha512-JWuKXswDXtqUPfuqh6rjCVMvTSSG3kUtwvSK/YdaNU0i+nZKxeqHmt/CO2+TyI/WSUFynGVmWT1xOHhCZAFsRQ==
+react-native-create-thumbnail@1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-create-thumbnail/-/react-native-create-thumbnail-1.6.1.tgz#e7f9aa4eccd8668c1e6dc33bf9caabbde999bbf1"
+  integrity sha512-BvXUtJlbFEkPI9QH/fXqrg7ubKocQAgifc3NLYKknJuWAUD1LQtl9UqkrmvKhx6+RKgMQN/dn9fiHAX0QZMkBw==
 
 react-native-fs@^2.20.0:
   version "2.20.0"

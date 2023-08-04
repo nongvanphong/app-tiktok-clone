@@ -10,6 +10,7 @@ import {
 import React, {useEffect} from 'react';
 import Toast from 'react-native-toast-message';
 import {NavigationContainer} from '@react-navigation/native';
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Profile from '../../screens/profile/profile';
 import ListItem from '../../screens/home/listview/listitem';
@@ -39,15 +40,6 @@ const A = () => {
       visibilityTime: 1000,
     });
   };
-  // useEffect(() => {
-  //   // Khởi tạo bộ xử lý thông báo
-  //   PushNotification.configure({
-  //     // Được gọi khi người dùng nhấn vào thông báo khi ứng dụng đang mở
-  //     onNotification: function (notification) {
-  //       console.log('Thông báo đã được mở hoặc nhận:', notification);
-  //     },
-  //   });
-  // }, []);
 
   const handleSendNotification = () => {
     // Lập lịch thông báo cục bộ
