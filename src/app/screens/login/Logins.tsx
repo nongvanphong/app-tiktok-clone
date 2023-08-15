@@ -34,7 +34,7 @@ const schema = yup
   .required();
 const Logins = ({route}) => {
   const [isL, setisL] = useState<boolean>(false);
-  const {socket} = useContext(MyAlertContext);
+  const {socket, setCountId} = useContext(MyAlertContext);
   const [isShowAlert, SetisShowAlert] = useState<boolean>(false);
   // Lấy giá trị email từ params
   const {email} = route.params;
@@ -63,6 +63,7 @@ const Logins = ({route}) => {
     await LocalStorage.setData('user', result.data);
     setisL(false);
     socket.emit('userLogin', {userId: result.data.id});
+    setCountId(result.data.id);
     return navigater.navigate('Home');
   };
   const hanldleClick = () => {

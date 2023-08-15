@@ -28,6 +28,8 @@ import Comment from '../../../components/Comment/Comment';
 import HomeContext from '../../../../Context/HomeContext';
 import {User} from '../../../../interface/InterfaceUser';
 import {LocalStorage} from '../../../localStorage/LocalStorage';
+import {useNavigation} from '@react-navigation/native';
+import {MyAlertContext} from '../../../../../App';
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 interface videos {
@@ -38,6 +40,7 @@ interface videos {
 
 const ListItem = React.memo(() => {
   const {ishowcmt, setIsCmtShown} = useContext(HomeContext);
+  const {countId, setCountId} = useContext(MyAlertContext);
   const [refreshing, setRefreshing] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState<number>(0); // hàm lưu vị trí video đnag phát
   const [isLoading, setIsLoading] = useState(false);
@@ -91,7 +94,28 @@ const ListItem = React.memo(() => {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    const getVideo = async () => {
+      try {
+        if (countId == -111 || countId == -2) {
+          return;
+        }
 
+        setRefreshing(true);
+        //setIsLoadMore(true);
+        const user: User = await LocalStorage.getData('user');
+        const result = await FetchVideo.GetAll(1, user ? user.id : -1);
+        setCurrentPage(1);
+        setVideoList(result.data);
+        setCountId(-2);
+        setRefreshing(false);
+      } catch (error) {
+        console.error('Error fetching video:', error);
+      }
+    };
+
+    getVideo();
+  }, [countId]);
   useEffect(() => {
     const getVideo = async () => {
       try {
@@ -119,8 +143,8 @@ const ListItem = React.memo(() => {
     const user: User = await LocalStorage.getData('user');
     const result = await FetchVideo.GetAll(1, user ? user.id : -1);
     setCurrentPage(1);
-
     setVideoList(result.data);
+    setCountId(-2);
     setRefreshing(false);
   };
   return (

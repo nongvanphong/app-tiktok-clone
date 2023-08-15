@@ -54,7 +54,7 @@ export const MyAlertContext = createContext<MyAlert>({} as MyAlert);
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const [countId, setCountId] = useState(-111);
   const backgroundStyle = {
     // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     backgroundColor: isDarkMode ? '#000' : '#000',
@@ -123,7 +123,8 @@ function App(): JSX.Element {
     });
   };
   return (
-    <MyAlertContext.Provider value={{showToast, showToast1, socket}}>
+    <MyAlertContext.Provider
+      value={{showToast, showToast1, socket, countId, setCountId}}>
       <SafeAreaView style={[backgroundStyle, styles.SafeAreaViewContainer]}>
         {/* <Learns.Lap1></Learns.Lap1> */}
 

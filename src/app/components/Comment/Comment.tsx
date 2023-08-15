@@ -63,6 +63,7 @@ const Comment = () => {
 
   const handleSendComment = async () => {
     if (!comment) return;
+    if (comment.trim().length === 0) return;
     if (!VideoID) return;
 
     const user: User = await LocalStorage.getData('user');

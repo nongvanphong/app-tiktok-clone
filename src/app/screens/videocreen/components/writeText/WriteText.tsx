@@ -28,6 +28,7 @@ const SuccessFail = (props: Type) => {
   });
   const [err, setErr] = useState({});
   const handlClick = () => {
+    
     if (textInput.tag?.length > 20) {
       setErr(p => ({...p, tag: true, name: false, msg: false}));
       return;

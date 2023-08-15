@@ -9,7 +9,7 @@ export default function Loading() {
       <Lottie
         autoPlay
         loop
-        source={require('../../../../../assets/json/loadvideo.json')}
+        source={require('../../../../../assets/json/a.json')}
       />
     </View>
   );

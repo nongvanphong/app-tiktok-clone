@@ -41,7 +41,7 @@ const schema = yup
 const Register = ({route}) => {
   // Lấy giá trị email từ params
   const [isL, setisL] = useState<boolean>(false);
-  const {socket} = useContext(MyAlertContext);
+  const {socket, setCountId} = useContext(MyAlertContext);
   const {email} = route.params;
   const navigator = useNavigation();
   const {
@@ -72,6 +72,7 @@ const Register = ({route}) => {
 
     socket.emit('userLogin', {userId: result.data.id});
     setisL(false);
+    setCountId(result.data.id);
     navigator.navigate('Home');
   };
   const hanldleClick = () => {

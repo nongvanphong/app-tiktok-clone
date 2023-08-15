@@ -72,7 +72,7 @@ const Profilemain = () => {
       <View>
         <View style={[styles.flexR, styles.justifyCenter]}>
           <View style={[styles.avt, styles.brRadiusAll]}>
-            {data.userimage || data.userimage != '' ? (
+            {data.userimage && data.userimage != '' ? (
               <Image
                 style={[styles.img, styles.brRadiusAll]}
                 source={{

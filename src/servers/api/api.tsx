@@ -1,6 +1,6 @@
-//const hot = '172.16.24.245';
-const hot = '192.168.10.21';
-//const hot = '192.168.1.104';
+//const hot = '172.16.26.224';
+//const hot = '192.168.10.21';
+const hot = '192.168.1.105';
 const port = 1234;
 export const http = 'http://' + hot + ':' + port;
 import axios, {AxiosRequestConfig} from 'axios';

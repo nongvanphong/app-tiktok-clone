@@ -1,5 +1,5 @@
 import {StyleSheet, View, Dimensions, Text} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import * as ImagePicker from 'react-native-image-picker';
 import SelectVideo from '../../components/video/selectvideo/SelectVideo';
 import FloatButtom from './components/floatbuttom/FloatButtom';
@@ -43,13 +43,15 @@ const SelectVideoScreen = ({navigation: {goBack}}) => {
       console.log('2');
     }
   };
-
+  useEffect(() => {
+    pickVideo();
+  }, []);
   const pickVideo = () => {
     let options: any = {
       title: 'Select video',
       mediaType: 'video',
       path: 'video',
-      videoQuality: 'medium',
+      videoQuality: 'high',
       durationLimit: 30,
     };
     ImagePicker.launchImageLibrary(options, response => {

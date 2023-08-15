@@ -15,7 +15,7 @@ type typerItemList = {
 
 const Itemlist = (props: typerItemList) => {
   const navigater = useNavigation();
-  const {showToast} = useContext(MyAlertContext);
+  const {showToast, setCountId} = useContext(MyAlertContext);
   const logout = async (index: number) => {
     switch (index) {
       case 0:
@@ -28,6 +28,7 @@ const Itemlist = (props: typerItemList) => {
         break;
       case 3:
         LocalStorage.removeData('user');
+        setCountId(-1);
         navigater.navigate('Home');
         showToast('Thông báo', 'success', 'Đăng xuất thành công');
         break;

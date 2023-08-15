@@ -1,5 +1,5 @@
 import {StyleSheet, Image, View, Text, TouchableOpacity} from 'react-native';
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 import HomeContext from '../../../../Context/HomeContext';
@@ -8,6 +8,7 @@ import {LocalStorage} from '../../../localStorage/LocalStorage';
 import {User} from '../../../../interface/InterfaceUser';
 import LoginAlert from '../../../components/alert/alert/LoginAlert';
 import {http} from '../../../../servers/api/api';
+import {MyAlertContext} from '../../../../../App';
 type Typer = {
   like_number?: number;
   comment_number?: number;
@@ -17,6 +18,7 @@ type Typer = {
   avatar?: string;
 };
 const TouchItem = React.memo((prosp: Typer) => {
+  const {countId, setCountId} = useContext(MyAlertContext);
   const {setVideoID, setIsCmtShown, setMyId} = useContext(HomeContext);
   const navigater = useNavigation();
   const [showDilog, setshowDilog] = useState<InterfaceAlert[]>({
@@ -25,13 +27,49 @@ const TouchItem = React.memo((prosp: Typer) => {
     sussecc: false,
     login: false,
   });
+
   const [data, setData] = useState<Typer>({
     like_number: prosp.like_number,
     comment_number: prosp.comment_number,
     videoId: prosp.videoId,
     your_like: prosp.your_like,
   });
+
+  useEffect(() => {
+    //console.log(prosp.videoId, '===>', data.videoId);
+
+    if (countId == -111) return;
+
+    if (countId == 2) {
+      setData({
+        ...data,
+        like_number: prosp.like_number,
+        comment_number: prosp.comment_number,
+        videoId: prosp.videoId,
+        your_like: prosp.your_like,
+      });
+      setCountId(-111);
+      return;
+    }
+    setData({
+      ...data,
+      like_number: prosp.like_number,
+      comment_number: prosp.comment_number,
+      videoId: prosp.videoId,
+      your_like: prosp.your_like,
+    });
+    setCountId(-111);
+    // setData({...data, your_like: 1});
+
+    // return;
+    // const user: User = await LocalStorage.getData('user');
+    // const result = await FetchVideo.GetAll(1, user ? user.id : -1);
+    // setCurrentPage(1);
+    // setVideoList(result.data);
+  }, [countId]);
+
   const like = async () => {
+    console.log('===> ||| ', data);
     const user: User = await LocalStorage.getData('user');
     if (!user || !user.id) {
       return setshowDilog(prevState => ({
@@ -76,7 +114,7 @@ const TouchItem = React.memo((prosp: Typer) => {
     <View style={styles.container}>
       <View style={styles.item}>
         <View style={[styles.flex, styles.border]}>
-          {prosp.avatar || prosp.avatar != '' ? (
+          {prosp.avatar && prosp.avatar != '' ? (
             <Image
               style={styles.avt}
               source={{
